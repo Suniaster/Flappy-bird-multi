@@ -1,0 +1,17 @@
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<canvas id="canvas"></canvas>
+<script>
+  var socket = io();
+  var random = Math.random();
+
+  socket.on('serverMsg', (data)=>{
+    console.log(data)
+  })
+  function send(msg){
+    socket.emit('frontMsg', {
+      msg: 'sim'
+    })
+  }
+</script>
+
+<script src="./src/index.js"></script>
