@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run build && node dist/index.js",
     "build": "tsc",
-    "test":  "npm run build && node dist/test.js"
+    "test": "npm run build && node dist/test.js"
   },
   "keywords": [],
   "author": "",
@@ -20,7 +20,7 @@
     "synaptic": "^1.1.4"
   },
   "devDependencies": {
-    "@types/express": "^4.17.1",
+    "@types/express": "^4.17.2",
     "@types/node": "^12.11.1",
     "@types/socket.io": "^2.1.4",
     "typescript": "^3.6.4"
