@@ -1,15 +1,27 @@
 import AbstractThing from "./AbstractThing";
+import CollisionRect from "./Collision/CollisionRectangle";
 
 export default class Bird extends AbstractThing{
-  constructor(pos_x, pos_y){
-    super(pos_x, pos_y);
-    this.vel_y = 0;
-    this.vel_x = 0;
+  constructor(position:Point){
+    super(position);
+
+    var tamanho = 50;
+    this.CollisionRangeList.push(
+      new CollisionRect(
+        {x:position.x,y:position.y},
+        {x:position.x+tamanho, y:position.y+tamanho}
+      )
+    )
+    this.velocity = {
+      x: 0,
+      y: 0
+    };
+
+    this.accel = {
+      x:0,
+      y: Bird.gravity
+    }
     
-    this.accel_y = Bird.gravity;
-    this.accel_x = 0;
-
-
-    this.symbol = '@';
+    this.symbol = 'Flappy';
   }
 }

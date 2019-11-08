@@ -13,50 +13,85 @@ export default class GameControl{
 
   time: number;
 
+  isRunning: boolean;
+
   constructor(grid_size:number[]= [500, 500]){
     this.grid = new SimpleGrid(grid_size[0], grid_size[1]);
     this.objects = [];
-    
-    this.flappy = new Bird(Math.floor(grid_size[0]/10), Math.floor(grid_size[1]/10));
-    this.objects.push(this.flappy);
-
     this.time = 0;
+    
+    //**Variaveis do flappy **/
+    this.flappy = new Bird({ 
+      x: Math.floor(grid_size[0]/10),
+      y: Math.floor(grid_size[1]/10)
+    });
+    this.objects.push(this.flappy);
+    this.isRunning = false;
   }
 
   createWall(){
-    var newWall = new Wall(1, this.grid.cols-2);
+    var newWall = new Wall({
+      x:this.grid.cols-1, y:0
+    });
     this.objects.push(newWall);
   }
 
-  continue(){
-    this.passTime();
-    // console.clear();
-    this.grid.draw();
-  }
+  /**
+   * Retorna verdadeiro caso o tempo tenha passado, falso caso não.
+   */
+  public passTime(): boolean{
 
+    if( this.objects.length == 1){
+      this.createWall();
+    }
 
-  passTime(){
     this.updateObjectsPos();
     this.updateGrid();
     this.time+=1;
+
+    this.isRunning = this.FlappyAlive();
+    return this.isRunning
   }
 
-  public getObjectsPositionValues(){
+  public getObjectsPositionValues():ObjectPositionMessage[]{
     return this.objects.map((v)=>{
       return v.getMovementValues();
     })
   }
 
 
+  //*** PRIVATE PART ****//
+
+  public restartGame(){
+    this.isRunning = false;
+    this.objects = [];
+    this.flappy = new Bird({ 
+      x: Math.floor(this.grid.cols/10),
+      y: Math.floor(this.grid.rows/10)
+    });
+    this.objects.push(this.flappy);
+    this.grid.resetGrid();
+  }
+
+  private FlappyAlive():boolean{
+    for(var i=0;i<this.objects.length ;i+=1){
+      if(this.objects[i].symbol == "Flappy")
+        return true;
+    }
+    return false;
+  }
+
   private updateObjectsPos(){
     for(var i = 0; i< this.objects.length; i+=1){
       var obj = this.objects[i];
+
       obj.move();
-      if(obj.pos_x < 0 || obj.pos_x > this.grid.rows){
+
+      if(obj.position.x < 0 || obj.position.x > this.grid.rows){
         this.objects.splice(i,1);
         i-=1;
       }
-      if(obj.pos_y < 0 || obj.pos_y > this.grid.cols){
+      if(obj.position.y < 0 || obj.position.y > this.grid.cols){
         this.objects.splice(i,1);
         i-=1;
       }
@@ -66,7 +101,7 @@ export default class GameControl{
   private updateGrid(){
     this.grid.resetGrid();
     this.objects.forEach((obj)=>{
-      this.grid.grid[obj.pos_x][obj.pos_y] = obj.symbol
+      this.grid.grid[obj.position.x][obj.position.y] = obj.symbol
     })
   }
 }

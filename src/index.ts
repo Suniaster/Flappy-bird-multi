@@ -1,11 +1,14 @@
 import ServerController from "./server/app/ServerController";
 import SocketsController from "./server/app/SocketsController";
+import GameControl from "./server/Game/GameControl";
 
 
 // Controladora do servidor
-var serverC = new ServerController();
+const serverC = new ServerController();
 serverC.initServer();
 
+const gameController = new GameControl([1000, 1000]);
+
 // Controlador dos sockets ligados ao servidor
-var socketsC = new SocketsController(serverC);
+const socketsC = new SocketsController(serverC, gameController);
 socketsC.initConnectionsHandler();
