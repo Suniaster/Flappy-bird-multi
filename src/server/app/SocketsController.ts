@@ -1,5 +1,5 @@
 import Socket from 'socket.io';
-import GameControl from '../Game/GameControl';
+import GameControl from './Game/GameControl';
 
 export default class SocketsController{
 
@@ -31,6 +31,7 @@ export default class SocketsController{
 
       //** Game Listeners **/
       socket.on("jump", (data)=>{
+        if(this.gameController.isRunning)
           this.gameController.flappy.velocity.y = -15
       })
 

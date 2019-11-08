@@ -1,6 +1,6 @@
 import ServerController from "./server/app/ServerController";
 import SocketsController from "./server/app/SocketsController";
-import GameControl from "./server/Game/GameControl";
+import GameControl from "./server/app/Game/GameControl";
 
 
 // Controladora do servidor

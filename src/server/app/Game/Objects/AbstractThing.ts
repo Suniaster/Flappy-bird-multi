@@ -11,6 +11,7 @@ export default abstract class AbstractThing{
 
   public CollisionRangeList: CollisionRect[];
   constructor(public position:Point){
+    this.CollisionRangeList = [];
   }
 
   move(){
