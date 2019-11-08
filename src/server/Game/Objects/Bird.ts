@@ -6,8 +6,8 @@ export default class Bird extends AbstractThing{
     this.vel_y = 0;
     this.vel_x = 0;
     
-    this.accel_y = 0;
-    this.accel_x = Bird.gravity;
+    this.accel_y = Bird.gravity;
+    this.accel_x = 0;
 
 
     this.symbol = '@';

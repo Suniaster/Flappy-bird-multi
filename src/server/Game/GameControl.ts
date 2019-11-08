@@ -1,23 +1,23 @@
-import GameGrid from "./Grid/ConsoleGrid";
 import Bird from "./Objects/Bird";
 import AbstractThing from "./Objects/AbstractThing";
 import Wall from "./Objects/Wall";
+import SimpleGrid from "./Grid/HtmlGrid";
 
 
 
 export default class GameControl{
-  grid:GameGrid;
+  grid:SimpleGrid;
   flappy: Bird;
 
   objects: AbstractThing[];
 
   time: number;
 
-  constructor(grid_size:number[]= [40, 80]){
-    this.grid = new GameGrid(grid_size[0], grid_size[1]);
+  constructor(grid_size:number[]= [500, 500]){
+    this.grid = new SimpleGrid(grid_size[0], grid_size[1]);
     this.objects = [];
     
-    this.flappy = new Bird(Math.floor(grid_size[0]/2), Math.floor(grid_size[1]/5));
+    this.flappy = new Bird(Math.floor(grid_size[0]/10), Math.floor(grid_size[1]/10));
     this.objects.push(this.flappy);
 
     this.time = 0;
@@ -30,7 +30,7 @@ export default class GameControl{
 
   continue(){
     this.passTime();
-    console.clear();
+    // console.clear();
     this.grid.draw();
   }
 
@@ -40,6 +40,13 @@ export default class GameControl{
     this.updateGrid();
     this.time+=1;
   }
+
+  public getObjectsPositionValues(){
+    return this.objects.map((v)=>{
+      return v.getMovementValues();
+    })
+  }
+
 
   private updateObjectsPos(){
     for(var i = 0; i< this.objects.length; i+=1){
