@@ -22,15 +22,16 @@ const BAR = 32;
 var c = document.getElementById("canvas");
 var ctx = c.getContext("2d");
 var imgFlappy = new Image();
-var imgWall = new Image();
-imgFlappy.src = './client/img/b.png';
-imgWall.src = './client/img/boss_2.png'
+var imgTop = new Image();
+var imgFill = new Image();
 
+imgFlappy.src = './client/img/b.png';
+imgTop.src = './client/img/cano_top.png'
+imgFill.src = './client/img/cano_fill.png'
 
 var socket = io();
 
 $(document).keydown((event)=>{
-  console.log(event.keyCode);
   switch(event.keyCode){
     case 65: // A
     socket.emit('jump', null);
@@ -44,24 +45,37 @@ socket.on("TimePassed", (data)=>{
   // console.log(data)
   let obj = JSON.parse(data);
   var img;
-  obj.forEach(element => {
-    switch(element.symbol){
-      case 'Flappy':
-      img = imgFlappy;
-      break;
-      case 'Wall':
-      img = imgWall;
-      break;
-      default:
-      img = imgFlappy;
+  for(var i=0; i<obj.length;i+=1){
+    var element = obj[i]
+    // console.log(element)
+    if(element.symbol == "Wall"){
+      drawWall(element.position.x, element.position.y, element.width, element.height)
     }
-
-    draw(img, element.position.x, element.position.y);
-  });
+    else{
+      draw(imgFlappy, element.position.x, element.position.y, element.width, element.height);
+    }
+  }
 })
 
-function draw(img, x, y){
-  ctx.drawImage(img, x,y);
+function draw(img, x, y, width, height){
+  ctx.drawImage(img, x, y, width, height);
+}
+
+function drawWall(x, y, width, height){
+  if(y> 1000/2) drawWallUpWards(x, y, width, height)
+  else drawWallDownWards(x, y, width, height);
+}
+
+function drawWallUpWards(x, y, width, height){
+  var topHeight = 30;
+  draw(imgTop, x, y, width, topHeight);
+  draw(imgFill, x, y+topHeight, height-topHeight);
+}
+
+function drawWallDownWards(x, y, width, height){
+  var topHeight = 30;
+  draw(imgFill, x, y, width , height-topHeight);
+  draw(imgTop, x, y + height-topHeight, width, topHeight);
 }
 
 function gamestart(){

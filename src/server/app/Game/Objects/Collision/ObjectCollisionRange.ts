@@ -1,6 +1,3 @@
-import CollisionRect from "./CollisionRectangle";
-
-
 export default abstract class ObjectCollisionRange{
 
   constructor(public position:Point){

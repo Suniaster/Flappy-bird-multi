@@ -16,5 +16,7 @@ interface ObjectPositionMessage{
     x:number,
     y:number
   },
-  symbol:string;
+  symbol:string,
+  width: number,
+  height: number
 }

@@ -1,23 +1,22 @@
-import CollisionRect from "./Collision/CollisionRectangle";
-
 export default abstract class AbstractThing{
 
   static gravity = 1;
 
   public velocity:Point;
   public accel: Point;
-
   public symbol:string;
 
-  public CollisionRangeList: CollisionRect[];
-  constructor(public position:Point){
-    this.CollisionRangeList = [];
+
+  constructor(public position:Point, public width, public height){
+  
+
   }
 
   move(){
     this.updateVel();
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
+  
   }
 
   updateVel(){
@@ -25,14 +24,15 @@ export default abstract class AbstractThing{
     this.velocity.y += this.accel.y;
   }
 
-  getMovementValues(){
+  getMovementValues(): ObjectPositionMessage{
     return {
       position:{
         x: this.position.x,
         y: this.position.y,
       },
-      symbol: this.symbol
+      symbol: this.symbol,
+      width: this.width,
+      height: this.height
     }
-
   }
 }

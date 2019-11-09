@@ -24,16 +24,46 @@ export default class GameControl{
     this.flappy = new Bird({ 
       x: Math.floor(grid_size[0]/10),
       y: Math.floor(grid_size[1]/10)
-    });
+    },
+    50, 50);
     this.objects.push(this.flappy);
     this.isRunning = false;
   }
 
-  createWall(){
+  /**
+   * Wall:
+   * 
+   *    *-------------------*
+   *    |            *      |
+   *    |                   |
+   *    |                   |
+   *    |                   |
+   *    |                   |
+   *    |                   |
+   *    |            *      |
+   *    |                   |
+   *    |                   |
+   *    |                   |
+   *    *-------------------*
+   * 
+   * aa
+   */
+  public createWall(){
+    var wallGap = 200;
+    var wallThickness = 100;
+
+    var pos_y = Wall.CalculateRandomPosition(this.grid.rows, 0.4);
+
     var newWall = new Wall({
       x:this.grid.cols-1, y:0
-    });
+    }, wallThickness, pos_y);
+
+    var newWall2 = new Wall({
+      x:this.grid.cols-1, y: pos_y + wallGap
+    }, wallThickness , this.grid.rows-1 -(pos_y + wallGap));
+
     this.objects.push(newWall);
+    this.objects.push(newWall2);
   }
 
   /**
@@ -61,17 +91,19 @@ export default class GameControl{
 
 
   //*** PRIVATE PART ****//
-
   public restartGame(){
     this.isRunning = false;
     this.objects = [];
+
     this.flappy = new Bird({ 
       x: Math.floor(this.grid.cols/10),
       y: Math.floor(this.grid.rows/10)
-    });
+    }, 50, 50);
+    
     this.objects.push(this.flappy);
     this.grid.resetGrid();
   }
+
 
   private FlappyAlive():boolean{
     for(var i=0;i<this.objects.length ;i+=1){
@@ -80,6 +112,7 @@ export default class GameControl{
     }
     return false;
   }
+
 
   private updateObjectsPos(){
     for(var i = 0; i< this.objects.length; i+=1){
