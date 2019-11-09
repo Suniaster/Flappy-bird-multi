@@ -6,7 +6,7 @@ export default class Wall extends AbstractThing{
   constructor(position:Point, width, height){
     super(position, width, height);
     this.velocity={
-      x: -1,
+      x: -10,
       y: 0
     }
 

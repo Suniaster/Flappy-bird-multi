@@ -37,6 +37,12 @@ export default class SocketsController{
 
       socket.on("gameStart", (data)=>{
         if(!this.gameController.isRunning){
+          this.sendToAllConnections("gameStart",{
+            grid:{
+              width: this.gameController.grid.cols,
+              height: this.gameController.grid.rows
+            }
+          })
           this.gameController.isRunning = true;
 
           this.gameTimer = setInterval(
@@ -75,6 +81,7 @@ export default class SocketsController{
       if (!this.gameController.isRunning){
         clearInterval(this.gameTimer);
         this.gameController.restartGame();
+        this.sendToAllConnections('gameEnd', {})
       }
       else{
         this.gameController.passTime();

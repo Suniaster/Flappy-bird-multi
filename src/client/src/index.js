@@ -1,3 +1,12 @@
-var a = document.getElementById('canvas')
 
-a.innerHTML('kk')
+
+
+
+
+
+
+
+
+var control =  new SocketsController()
+
+control.startConnection();

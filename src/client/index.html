@@ -1,85 +1,19 @@
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <div>
-
-  <div>
-    <button onclick="gamestart()">COMEÇAR JOGO</button>
+  <div id="canvasContainer">
   </div>
-  <div>
-    <canvas id="canvas" width="1000px" height="1000px"></canvas>
-  </div>
-  <script src="./client/client.js"></script>
 </div>
-<script>
+<script src="./client/src/DrawerController.js"></script>
+<script src="./client/src/ScreeController.js"></script>
+<script src="./client/src/SocketsController.js"></script>
 
-const UP = 38;
-const DOWN = 40;
-const LEFT = 37;
-const RIGHT = 39;
-const BAR = 32;
+<script src="./client/src/index.js"></script>
 
-
-var c = document.getElementById("canvas");
-var ctx = c.getContext("2d");
-var imgFlappy = new Image();
-var imgTop = new Image();
-var imgFill = new Image();
-
-imgFlappy.src = './client/img/b.png';
-imgTop.src = './client/img/cano_top.png'
-imgFill.src = './client/img/cano_fill.png'
-
-var socket = io();
-
-$(document).keydown((event)=>{
-  switch(event.keyCode){
-    case 65: // A
-    socket.emit('jump', null);
-    default:
-    break;
-  }
-})
-
-socket.on("TimePassed", (data)=>{
-  ctx.clearRect(0,0, 1000, 1000)
-  // console.log(data)
-  let obj = JSON.parse(data);
-  var img;
-  for(var i=0; i<obj.length;i+=1){
-    var element = obj[i]
-    // console.log(element)
-    if(element.symbol == "Wall"){
-      drawWall(element.position.x, element.position.y, element.width, element.height)
-    }
-    else{
-      draw(imgFlappy, element.position.x, element.position.y, element.width, element.height);
-    }
-  }
-})
-
-function draw(img, x, y, width, height){
-  ctx.drawImage(img, x, y, width, height);
+<style>
+html, body {
+  width:  100%;
+  height: 100%;
+  margin: 0;
 }
-
-function drawWall(x, y, width, height){
-  if(y> 1000/2) drawWallUpWards(x, y, width, height)
-  else drawWallDownWards(x, y, width, height);
-}
-
-function drawWallUpWards(x, y, width, height){
-  var topHeight = 30;
-  draw(imgTop, x, y, width, topHeight);
-  draw(imgFill, x, y+topHeight, height-topHeight);
-}
-
-function drawWallDownWards(x, y, width, height){
-  var topHeight = 30;
-  draw(imgFill, x, y, width , height-topHeight);
-  draw(imgTop, x, y + height-topHeight, width, topHeight);
-}
-
-function gamestart(){
-  socket.emit('gameStart',null);
-}
-
-</script>
+</style>
