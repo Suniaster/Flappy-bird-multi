@@ -14,7 +14,7 @@ export default class SocketsController{
     this.io = Socket(serverController.server,{});
     this.connections = []
 
-    this.frameRate = 30;
+    this.frameRate = 40;
   }
 
   initConnectionsHandler(): void{

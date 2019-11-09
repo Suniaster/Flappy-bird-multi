@@ -9,6 +9,9 @@ class DrawerController{
     this.imgTop = new Image();
     this.imgFill = new Image();
     
+    this.background = new Image();
+    this.background.src = './client/img/back.png'
+
     this.imgFlappy.src = './client/img/b.png';
 
     this.imgTop.src = './client/img/cano_top.png'
@@ -16,6 +19,15 @@ class DrawerController{
     this.topHeight = 30;
   }
 
+
+  drawBackground(){
+    this.ctx.drawImage(this.background, 
+      0, 0, // sx, sy
+      this.background.width, this.background.height, //sWidth, sHeight
+      0, 0, // dx, dy
+      this.screenControl.screen_width, this.screenControl.screen_height
+      );
+  }
 
   drawScaledWall(x,y,width, height){
     let newCoords = this.screenControl.transformCoords({

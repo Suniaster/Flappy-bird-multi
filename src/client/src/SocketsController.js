@@ -45,7 +45,8 @@ class SocketsController{
     
 
     this.socket.on("TimePassed", (data)=>{
-      this.drawer.clearScreen()
+      this.drawer.clearScreen();
+      this.drawer.drawBackground();
       // console.log(data)
       let obj = JSON.parse(data);
       var img;

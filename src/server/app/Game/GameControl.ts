@@ -53,7 +53,7 @@ export default class GameControl{
     var wallThickness = 100;
 
     var pos_y = Wall.CalculateRandomPosition(this.grid.rows, 0.4);
-
+    
     var newWall = new Wall({
       x:this.grid.cols-1, y:0
     }, wallThickness, pos_y);
@@ -120,11 +120,11 @@ export default class GameControl{
 
       obj.move();
 
-      if(obj.position.x < 0 || obj.position.x > this.grid.rows){
+      if(obj.position.x < 0 || obj.position.x >= this.grid.cols){
         this.objects.splice(i,1);
         i-=1;
       }
-      if(obj.position.y < 0 || obj.position.y > this.grid.cols){
+      if(obj.position.y < 0 || obj.position.y >= this.grid.rows){
         this.objects.splice(i,1);
         i-=1;
       }
@@ -134,7 +134,7 @@ export default class GameControl{
   private updateGrid(){
     this.grid.resetGrid();
     this.objects.forEach((obj)=>{
-      this.grid.grid[obj.position.x][obj.position.y] = obj.symbol
+      this.grid.grid[obj.position.y][obj.position.x] = obj.symbol
     })
   }
 }
