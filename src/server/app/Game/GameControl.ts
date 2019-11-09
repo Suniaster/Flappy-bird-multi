@@ -53,8 +53,8 @@ export default class GameControl{
     var wallGap = 200;
     var wallThickness = 100;
 
-    // var pos_y = Wall.CalculateRandomPosition(this.grid.rows, 0.4);
-    var pos_y = Math.floor(this.grid.rows/4);
+    var pos_y = Wall.CalculateRandomPosition(this.grid.rows, 0.4);
+    // var pos_y = Math.floor(this.grid.rows/4);
     var newWall = new Wall({
       x:this.grid.cols-1, y:0
     }, wallThickness, pos_y);

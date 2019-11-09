@@ -7,7 +7,7 @@ import GameControl from "./server/app/Game/GameControl";
 const serverC = new ServerController();
 serverC.initServer();
 
-const gameController = new GameControl([500,1000]);
+const gameController = new GameControl([1000,1000]);
 
 // Controlador dos sockets ligados ao servidor
 const socketsC = new SocketsController(serverC, gameController);

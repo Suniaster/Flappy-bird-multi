@@ -12,7 +12,7 @@ class DrawerController{
     this.background = new Image();
     this.background.src = './client/img/back.png'
 
-    this.imgFlappy.src = './client/img/b.png';
+    this.imgFlappy.src = './client/img/guy.png';
 
     this.imgTop.src = './client/img/cano_top.png'
     this.imgFill.src = './client/img/cano_fill.png'
