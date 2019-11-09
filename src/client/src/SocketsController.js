@@ -32,7 +32,8 @@ class SocketsController{
       let ctx = c.getContext("2d");
       this.drawer = new DrawerController(
         ctx,
-        c
+        c,
+        this.canvasController
       )
       ctx.canvas.width  = window.innerWidth;
       ctx.canvas.height = window.innerHeight;
@@ -44,7 +45,7 @@ class SocketsController{
     
 
     this.socket.on("TimePassed", (data)=>{
-      this.drawer.ctx.clearRect(0,0, 1000, 1000)
+      this.drawer.clearScreen()
       // console.log(data)
       let obj = JSON.parse(data);
       var img;
@@ -52,10 +53,10 @@ class SocketsController{
         var element = obj[i]
         // console.log(element)
         if(element.symbol == "Wall"){
-          this.drawer.drawWall(element.position.x, element.position.y, element.width, element.height)
+          this.drawer.drawScaledWall(element.position.x, element.position.y, element.width, element.height)
         }
         else{
-          this.drawer.drawFlappy(element.position.x, element.position.y, element.width, element.height);
+          this.drawer.drawScaledFlappy(element.position.x, element.position.y, element.width, element.height);
         }
       }
     })
