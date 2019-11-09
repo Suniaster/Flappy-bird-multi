@@ -11,7 +11,7 @@ interface socketEvent{
   callback: (data)=>{}
 }
 
-interface ObjectPositionMessage{
+interface ObjectInfoMessage{
   position:{
     x:number,
     y:number

@@ -24,7 +24,7 @@ export default abstract class AbstractThing{
     this.velocity.y += this.accel.y;
   }
 
-  getMovementValues(): ObjectPositionMessage{
+  getMovementValues(): ObjectInfoMessage{
     return {
       position:{
         x: this.position.x,

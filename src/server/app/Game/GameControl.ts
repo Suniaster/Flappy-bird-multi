@@ -83,7 +83,7 @@ export default class GameControl{
     return this.isRunning
   }
 
-  public getObjectsPositionValues():ObjectPositionMessage[]{
+  public getObjectsPositionValues():ObjectInfoMessage[]{
     return this.objects.map((v)=>{
       return v.getMovementValues();
     })
