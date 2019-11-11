@@ -14,7 +14,9 @@ class SocketsController{
     $(document).keydown((event)=>{
       switch(event.keyCode){
         case 65: // A
-        this.socket.emit('jump', null);
+        this.socket.emit('jump', {
+          id: this.socket.id
+        });
         default:
         break;
       }
@@ -65,7 +67,9 @@ class SocketsController{
 
   gamestart(){
     return ()=>{
-      this.socket.emit('gameStart', null);
+      this.socket.emit('gameStart', {
+        birdIds: [this.socket.id]
+      });
     }
   }
 }

@@ -32,17 +32,20 @@ export default class SocketsController{
       //** Game Listeners **/
       socket.on("jump", (data)=>{
         if(this.gameController.isRunning)
-          this.gameController.flappy.velocity.y = -15
+          this.gameController.jump(data.id)
       })
 
       socket.on("gameStart", (data)=>{
         if(!this.gameController.isRunning){
-          this.sendToAllConnections("gameStart",{
+          let gridConfig = {
             grid:{
               width: this.gameController.grid.cols,
               height: this.gameController.grid.rows
             }
-          })
+          }
+
+          this.sendToAllConnections("gameStart",gridConfig)
+          this.gameController.createBirds(data.birdIds)
           this.gameController.isRunning = true;
 
           this.gameTimer = setInterval(
@@ -80,7 +83,7 @@ export default class SocketsController{
     return ()=>{
       if (!this.gameController.isRunning){
         clearInterval(this.gameTimer);
-        this.gameController.restartGame();
+        this.gameController.resetGame();
         this.sendToAllConnections('gameEnd', {})
       }
       else{

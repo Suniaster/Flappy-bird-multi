@@ -8,29 +8,82 @@ import CollisionController from "./Objects/Collision/CollisionController";
 
 export default class GameControl{
   grid:SimpleGrid;
-  flappy: Bird;
-
   objects: AbstractThing[];
-
   time: number;
-
   isRunning: boolean;
+
+  birds: { [id: string] : Bird; } = {};
+  wallDistance = 300;
 
   constructor(grid_size:number[]= [500, 500]){
     this.grid = new SimpleGrid(grid_size[0], grid_size[1]);
     this.objects = [];
     this.time = 0;
+    this.isRunning = false;
     
     //**Variaveis do flappy **/
-    this.flappy = new Bird({ 
-      x: Math.floor(grid_size[0]/10),
-      y: Math.floor(grid_size[1]/10)
-    },
-    50, 50);
-    this.objects.push(this.flappy);
-    this.isRunning = false;
+    this.birds = {};
+    this.wallDistance = 30;
   }
 
+  /**
+   * Retorna verdadeiro caso o tempo tenha passado, falso caso não.
+   */
+  public passTime(): boolean{
+
+    if( this.time%this.wallDistance == 0){
+      this.createWall();
+    }
+
+    this.verifyCollisions();
+    this.updateObjectsPos();
+    this.updateGrid();
+    this.time+=1;
+
+    this.isRunning = this.AnyFlappyAlive();
+    return this.isRunning
+  }
+
+  public getObjectsPositionValues():ObjectInfoMessage[]{
+    let retList = []
+    this.objects.forEach((v)=>{
+      retList.push( v.getMovementValues() );
+    })
+    for(var key in this.birds) {
+      let obj = this.birds[key];
+      retList.push(obj);
+    }
+    return retList
+  }
+
+  public createBirds(ids: string[]){
+    ids.forEach((val)=>{
+      let newBird = new Bird({ 
+        x: Math.floor(this.grid.cols/10),
+        y: Math.floor(this.grid.rows/10),
+      },
+      50, 50, val);
+      this.birds[newBird.id] = newBird;
+    })
+  } 
+
+  public resetGame(){
+    this.isRunning = false;
+    this.objects = [];
+    this.birds = {};
+    this.time = 0;
+    this.grid.resetGrid();
+  }
+
+  public removeBirdById(id:string){
+    delete this.birds[id];
+  }
+
+  public jump(id: string){
+    this.birds[id].jump();
+  }
+  
+  //*** PRIVATE PART ****//
   /**
    * Wall:
    * 
@@ -49,7 +102,7 @@ export default class GameControl{
    * 
    * aa
    */
-  public createWall(){
+  private createWall(){
     var wallGap = 200;
     var wallThickness = 100;
 
@@ -67,86 +120,30 @@ export default class GameControl{
     this.objects.push(newWall2);
   }
 
-  /**
-   * Retorna verdadeiro caso o tempo tenha passado, falso caso não.
-   */
-  public passTime(): boolean{
-
-    if( this.objects.length == 1){
-      this.createWall();
-    }
-
-    this.verifyCollisions();
-    this.updateObjectsPos();
-    this.updateGrid();
-    this.time+=1;
-
-    this.isRunning = this.FlappyAlive();
-    return this.isRunning
-  }
-
-  public getObjectsPositionValues():ObjectInfoMessage[]{
-    return this.objects.map((v)=>{
-      return v.getMovementValues();
-    })
-  }
-
-
-  //*** PRIVATE PART ****//
-  public restartGame(){
-    this.isRunning = false;
-    this.objects = [];
-
-    this.flappy = new Bird({ 
-      x: Math.floor(this.grid.cols/7),
-      y: Math.floor(this.grid.rows/5)
-    }, 50, 50);
-    
-    this.objects.push(this.flappy);
-    this.grid.resetGrid();
-  }
-
   private verifyCollisions(){
     let colided;
-    let obj1;
+    let obj1: Bird;
     let obj2;
     let length= this.objects.length;
-    for(let i=0;i<length; i+=1){
-      obj1 = this.objects[i];
-      for(let j=i+1;j<length;j+=1){
-        if(i===j){
-          continue;
-        }
-
+    for(var key in this.birds) {
+      obj1 = this.birds[key];
+      for(let j=0;j<length;j+=1){
         obj2 = this.objects[j];
 
         colided = CollisionController.rectCollision(obj1, obj2);
         // console.log(colided)
         if(colided){
-          if(obj1.symbol == "Flappy"){
-            this.objects.splice(i,1);
-            length= this.objects.length;
-            i-=1;
-            break;
-          }
-          if(obj2.symbol == "Flappy"){
-            this.objects.splice(j,1);
-            length= this.objects.length
-            j-=1;
-          }
+          this.removeBirdById(obj1.id)
         }
       }
     }
   }
 
-  private FlappyAlive():boolean{
-    for(var i=0;i<this.objects.length ;i+=1){
-      if(this.objects[i].symbol == "Flappy")
-        return true;
-    }
-    return false;
+  private AnyFlappyAlive():boolean{
+    if(Object.keys(this.birds).length === 0)
+        return false;
+    return true;
   }
-
 
   private updateObjectsPos(){
     for(var i = 0; i< this.objects.length; i+=1){
@@ -154,13 +151,25 @@ export default class GameControl{
 
       obj.move();
 
-      if(obj.position.x < 0 || obj.position.x >= this.grid.cols){
+      if(
+        obj.position.x < 0 || obj.position.x >= this.grid.cols ||
+        obj.position.y < 0 || obj.position.y >= this.grid.rows
+      ){
         this.objects.splice(i,1);
         i-=1;
       }
-      if(obj.position.y < 0 || obj.position.y >= this.grid.rows){
-        this.objects.splice(i,1);
-        i-=1;
+    }
+
+    // Move birds
+    for(var key in this.birds) {
+      let bird = this.birds[key];
+
+      bird.move()
+      if(
+        bird.position.x < 0 || bird.position.x >= this.grid.cols ||
+        bird.position.y < 0 || bird.position.y >= this.grid.rows
+      ){
+        this.removeBirdById(bird.id)
       }
     }
   }
@@ -170,5 +179,11 @@ export default class GameControl{
     this.objects.forEach((obj)=>{
       this.grid.grid[obj.position.y][obj.position.x] = obj.symbol
     })
+
+    // Update position of birds
+    for(var key in this.birds) {
+      let obj = this.birds[key];
+      this.grid.grid[obj.position.y][obj.position.x] = obj.symbol
+    }
   }
 }

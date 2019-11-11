@@ -1,7 +1,8 @@
 import AbstractThing from "./AbstractThing";
 
 export default class Bird extends AbstractThing{
-  constructor(public position:Point, public width, public height){
+
+  constructor(public position:Point, public width, public height, public id:string){
     super(position, width, height);
     
     this.velocity = {
@@ -15,5 +16,10 @@ export default class Bird extends AbstractThing{
     }
     
     this.symbol = 'Flappy';
+  }
+
+
+  public jump():void{
+    this.velocity.y = -15
   }
 }
