@@ -13,7 +13,7 @@ export default class GameControl{
   isRunning: boolean;
 
   birds: { [id: string] : Bird; } = {};
-  wallDistance = 300;
+  wallDistance:number;
 
   constructor(grid_size:number[]= [500, 500]){
     this.grid = new SimpleGrid(grid_size[0], grid_size[1]);
@@ -23,7 +23,7 @@ export default class GameControl{
     
     //**Variaveis do flappy **/
     this.birds = {};
-    this.wallDistance = 30;
+    this.wallDistance = 50;
   }
 
   /**
@@ -82,7 +82,7 @@ export default class GameControl{
   public jump(id: string){
     this.birds[id].jump();
   }
-  
+
   //*** PRIVATE PART ****//
   /**
    * Wall:
@@ -106,15 +106,15 @@ export default class GameControl{
     var wallGap = 200;
     var wallThickness = 100;
 
-    var pos_y = Wall.CalculateRandomPosition(this.grid.rows, 0.4);
+    var pos_y = Wall.CalculateRandomPosition(this.grid.rows, 0.25);
     // var pos_y = Math.floor(this.grid.rows/4);
     var newWall = new Wall({
       x:this.grid.cols-1, y:0
-    }, wallThickness, pos_y);
+    }, wallThickness, pos_y - wallGap/2, "up");
 
     var newWall2 = new Wall({
-      x:this.grid.cols-1, y: pos_y + wallGap
-    }, wallThickness , this.grid.rows-(pos_y + wallGap));
+      x:this.grid.cols-1, y: pos_y + wallGap/2
+    }, wallThickness , this.grid.rows-(pos_y + wallGap/2), "down");
 
     this.objects.push(newWall);
     this.objects.push(newWall2);

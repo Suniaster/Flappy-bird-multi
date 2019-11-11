@@ -3,8 +3,8 @@ import AbstractThing from "./AbstractThing";
 
 
 export default class Wall extends AbstractThing{
-  constructor(position:Point, width, height){
-    super(position, width, height);
+  constructor(position:Point, width, height, id:string){
+    super(position, width, height, id);
     this.velocity={
       x: -10,
       y: 0

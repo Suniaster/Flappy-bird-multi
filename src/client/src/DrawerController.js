@@ -29,7 +29,7 @@ class DrawerController{
       );
   }
 
-  drawScaledWall(x,y,width, height){
+  drawScaledWall(x,y,width, height, id){
     let newCoords = this.screenControl.transformCoords({
       x: x,
       y: y
@@ -37,7 +37,7 @@ class DrawerController{
     let newWidth = this.screenControl.scaleWidth(width)
     let newHeight = this.screenControl.scaleHeight(height)
 
-    this.drawWall(newCoords.x, newCoords.y, newWidth, newHeight);
+    this.drawWall(newCoords.x, newCoords.y, newWidth, newHeight, id);
   }
 
   drawScaledFlappy(x,y,width, height){
@@ -57,8 +57,8 @@ class DrawerController{
   }
 
 
-  drawWall(x, y, width, height){
-    if(y> this.screenControl.screen_height/2) this.drawWallUpWards(x, y, width, height)
+  drawWall(x, y, width, height, id){
+    if(id == "down") this.drawWallUpWards(x, y, width, height)
     else this.drawWallDownWards(x, y, width, height);
   }
   

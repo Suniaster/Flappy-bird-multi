@@ -6,8 +6,7 @@ export default abstract class AbstractThing{
   public accel: Point;
   public symbol:string;
 
-
-  constructor(public position:Point, public width, public height){
+  constructor(public position:Point, public width, public height, public id:string){
   
 
   }
@@ -32,7 +31,8 @@ export default abstract class AbstractThing{
       },
       symbol: this.symbol,
       width: this.width,
-      height: this.height
+      height: this.height,
+      id: this.id
     }
   }
 }

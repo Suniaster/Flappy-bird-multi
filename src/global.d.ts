@@ -18,5 +18,6 @@ interface ObjectInfoMessage{
   },
   symbol:string,
   width: number,
-  height: number
+  height: number,
+  id: string
 }

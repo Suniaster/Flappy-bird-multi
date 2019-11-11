@@ -3,7 +3,7 @@ import AbstractThing from "./AbstractThing";
 export default class Bird extends AbstractThing{
 
   constructor(public position:Point, public width, public height, public id:string){
-    super(position, width, height);
+    super(position, width, height, id);
     
     this.velocity = {
       x: 0,

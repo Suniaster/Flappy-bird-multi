@@ -51,12 +51,11 @@ class SocketsController{
       this.drawer.drawBackground();
       // console.log(data)
       let obj = JSON.parse(data);
-      var img;
       for(var i=0; i<obj.length;i+=1){
         var element = obj[i]
         // console.log(element)
         if(element.symbol == "Wall"){
-          this.drawer.drawScaledWall(element.position.x, element.position.y, element.width, element.height)
+          this.drawer.drawScaledWall(element.position.x, element.position.y, element.width, element.height, element.id)
         }
         else{
           this.drawer.drawScaledFlappy(element.position.x, element.position.y, element.width, element.height);
