@@ -1,3 +1,3 @@
-var control =  new SocketsController()
+let control =  new SocketsController()
 
 control.startConnection();

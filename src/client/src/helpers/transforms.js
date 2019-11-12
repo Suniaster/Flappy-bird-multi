@@ -1,4 +1,4 @@
-class ScreenController{
+class TransformGrid{
 
   constructor(grid_width, grid_height, screen_width, screen_height){
     this.grid_width = grid_width
@@ -25,18 +25,4 @@ class ScreenController{
       y: Math.floor(y*this.scale_height_factor)
     }
   }
-
-  changeContainerToCanvas(id){
-    let canvasContainer = document.getElementById(id);
-    canvasContainer.innerHTML = '<canvas id="canvas"></canvas>';
-    return document.getElementById("canvas");
-  }
-
-  changeContainerToButton(id, callback_function){
-    var canvasContainer = $("#canvasContainer");
-    canvasContainer.html( '<button id="but">COMEÇAR JOGO</button>' );
-    $("#but").click(callback_function)
-    return  document.getElementById("but");
-  }
-
 }

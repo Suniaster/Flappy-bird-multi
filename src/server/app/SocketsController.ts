@@ -14,7 +14,7 @@ export default class SocketsController{
     this.io = Socket(serverController.server,{});
     this.connections = []
 
-    this.frameRate = 40;
+    this.frameRate = 60;
   }
 
   initConnectionsHandler(): void{
@@ -50,7 +50,7 @@ export default class SocketsController{
 
           this.gameTimer = setInterval(
             this.PassTime(), 
-            this.frameRate/1000
+            1000/this.frameRate
           );
         } 
       })

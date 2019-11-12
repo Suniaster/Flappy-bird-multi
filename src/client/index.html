@@ -1,19 +1,45 @@
-<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<div>
-  <div id="canvasContainer">
-  </div>
-</div>
-<script src="./client/src/ScreeController.js"></script>
-<script src="./client/src/DrawerController.js"></script>
-<script src="./client/src/SocketsController.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Flappy</title>
+  <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+    <div id="menu">
+      <button id="but">COMEÇAR JOGO</button>
+    </div>
+    
+    <div id="GameWrapper">
+        <canvas id="canvasBottom"></canvas>
+        <canvas id="canvasTop"></canvas>
+    </div>
+</body>
+  <script src="./client/src/helpers/transforms.js"></script>
+  <script src="./client/src/controllers/ImageController.js"></script>
+  <script src="./client/src/controllers/DrawerController.js"></script>
+  <script src="./client/src/controllers/SocketsController.js"></script>
+  
+  <script src="./client/src/index.js"></script>
 
-<script src="./client/src/index.js"></script>
-
-<style>
-html, body {
-  width:  100%;
-  height: 100%;
-  margin: 0;
-}
-</style>
+  <style>
+    html, body {
+      width:  100%;
+      height: 100%;
+      margin: 0;
+    }
+    #GameWrapper{
+        position:relative;
+        width:80%;
+        height:80%;
+    }
+    #canvasTop,#canvasBottom{
+        position:absolute; top:0px; left:0px;
+        width:100%;
+        height:100%;
+    }
+  </style>
+</html>
