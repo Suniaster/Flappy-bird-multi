@@ -5,6 +5,12 @@ const fs = require('fs');
 
 
 
+/**
+ * 1 - distancia até o próximo cano,
+ * 2 - altura do cano de baixo
+ * 3 - velocidade y
+ * 4 - altura em y
+ */
 
 var json_net = AbstractNet.loadJSON("./net.json")
 

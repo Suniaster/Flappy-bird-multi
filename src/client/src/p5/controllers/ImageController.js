@@ -8,9 +8,7 @@ class ImageController{
   }
 
   registerImage(name, image_name){
-    let toAdd =  new Image()
-    toAdd.src = './client/img/'+ image_name
-    this.images[name] = toAdd
+    this.images[name] = loadImage('./client/img/'+ image_name)
     return this.images[name]
   }
 

@@ -35,6 +35,10 @@ export default class SocketsController{
           this.gameController.jump(data.id)
       })
 
+      socket.on("isRunning", ()=>{
+
+      })
+
       socket.on("gameStart", (data)=>{
         if(!this.gameController.isRunning){
           let gridConfig = {
