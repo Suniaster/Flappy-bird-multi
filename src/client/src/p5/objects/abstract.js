@@ -43,8 +43,8 @@ class AbstractObj{
   }
 
 
-  jump(){
-    this.vel.y = -20
+  jump(y_vel){
+    this.vel.y = y_vel
   }
 
 }

@@ -4,13 +4,14 @@ let game = new GameWindow();
 let socketControl = new SocketsController(game);
 
 socketControl.startConnection();
+game.registerSocket(socketControl.socket);
 
 function preload() {
   game.preload();
 }
 
 function setup() {
-  let canv = createCanvas(1080, 680);
+  let canv = createCanvas(game.size.x, game.size.y);
   canv.position(0, 0);
   frameRate(60);
 
@@ -32,7 +33,7 @@ function keyPressed(){
   console.log(keyCode)
   switch(keyCode){
     case 87: // W
-      game.objects.getObject(socketControl.socket.id).jump()
+      socketControl.socket.emit('jump', {id:socketControl.socket.id});
       break;
     case 68: // D
       break;
