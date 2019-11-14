@@ -19,12 +19,16 @@ export default class SocketsController{
 
   initConnectionsHandler(): void{
     this.io.sockets.on('connection', (socket)=>{
+
       console.log('Socket connection '+ socket.id);
       this.connections.push(socket)
     
       //** Socket Listeners **/
       socket.on("disconnect", (data)=>{
         this.removeSocket(socket.id);
+        this.sendToAllConnections('playerDisconnected', {
+          id: socket.id
+        })
         console.log('Disconnected');
       })
 
@@ -33,25 +37,26 @@ export default class SocketsController{
       socket.on("jump", (data)=>{
         if(this.gameController.isRunning)
           this.gameController.jump(data.id)
-      })
-
-      socket.on("isRunning", ()=>{
-
+          let vel = this.gameController.birds[data.id].velocity.y
+          socket.emit("jump", {id: data.id, vel_y: vel})
       })
 
       socket.on("gameStart", (data)=>{
         if(!this.gameController.isRunning){
-          let gridConfig = {
-            grid:{
-              width: this.gameController.grid.cols,
+          let ids = this.connections.map( v=> v.id)
+          this.gameController.createBirds(ids)
+
+          this.sendToAllConnections("gameStart",{
+            window: {
+              width:  this.gameController.grid.cols,
               height: this.gameController.grid.rows
+            },
+            birds:{
+              ids: ids
             }
-          }
+          })
 
-          this.sendToAllConnections("gameStart",gridConfig)
-          this.gameController.createBirds(data.birdIds)
           this.gameController.isRunning = true;
-
           this.gameTimer = setInterval(
             this.PassTime(), 
             1000/this.frameRate
@@ -70,15 +75,8 @@ export default class SocketsController{
   }
 
   sendToAllConnections(eventName:string ,message: Object){
-    var strMsg = JSON.stringify(message);
     this.connections.forEach((con)=>{
-      con.emit(eventName, strMsg);
-    })
-  }
-
-  createListenerToConnections(eventName: string, functionCallBack: (data: Object)=>{}){
-    this.connections.forEach((con)=>{
-      con.on(eventName, functionCallBack);
+      con.emit(eventName, message);
     })
   }
 
@@ -92,7 +90,6 @@ export default class SocketsController{
       }
       else{
         this.gameController.passTime();
-        this.sendToAllConnections('TimePassed',this.gameController.getObjectsPositionValues());
       }
     }
   }
