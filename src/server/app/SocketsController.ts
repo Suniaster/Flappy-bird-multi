@@ -33,12 +33,13 @@ export default class SocketsController{
       })
 
 
+
       //** Game Listeners **/
       socket.on("jump", (data)=>{
         if(this.gameController.isRunning)
           this.gameController.jump(data.id)
-          let vel = this.gameController.birds[data.id].velocity.y
-          socket.emit("jump", {id: data.id, vel_y: vel})
+          let obj = this.gameController.objController.getById(data.id)
+          socket.emit("jump", {id: data.id, vel_y: obj.velocity.y})
       })
 
       socket.on("gameStart", (data)=>{
@@ -48,8 +49,8 @@ export default class SocketsController{
 
           this.sendToAllConnections("gameStart",{
             window: {
-              width:  this.gameController.grid.cols,
-              height: this.gameController.grid.rows
+              width:  this.gameController.world.width,
+              height: this.gameController.world.height
             },
             birds:{
               ids: ids

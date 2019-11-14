@@ -26,6 +26,7 @@ function draw() {
   
   if(game.menu.gameRunning){
     game.objects.moveAndDrawAllObjs()
+    game.time += 1
   } 
 }
 

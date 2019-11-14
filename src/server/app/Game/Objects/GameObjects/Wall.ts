@@ -1,12 +1,12 @@
-import AbstractThing from "./AbstractThing";
+import AbstractThing from "../AbstractThing";
 
 
 
 export default class Wall extends AbstractThing{
-  constructor(position:Point, width, height, id:string){
+  constructor(position:Point, width, height, id:string=Wall.makeid(10)){
     super(position, width, height, id);
     this.velocity={
-      x: -10,
+      x: -2,
       y: 0
     }
 
@@ -19,7 +19,6 @@ export default class Wall extends AbstractThing{
   }
 
   /**
-   * 
    * @param length of screen
    * @param P number between 0 and 0.5 percentage of screen to ignore;
    */

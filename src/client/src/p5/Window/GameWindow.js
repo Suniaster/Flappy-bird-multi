@@ -8,9 +8,10 @@ class GameWindow{
     this.imgControl = new ImageController();
 
     this.size = {
-      x: 600, y:600
+      x: 1000, y:1000
     }
     this.socket = null;
+    this.time = 0;
   }
 
   //**  P5 Methods   **//
@@ -33,7 +34,7 @@ class GameWindow{
   }
 
   preload(){
-    this.imgControl.registerImage('flappy', 'guy.png');
+    this.imgControl.registerImage('flappy', 'bird2.png');
     this.imgControl.registerImage('cano', 'cano_fill.png');
 
     this.imgControl.registerImage('bg', 'back.png');
@@ -57,15 +58,20 @@ class GameWindow{
   }
 
   createObject(symbol, position, vel, accel, id, width, height){
+    let img = undefined
+    
     switch(symbol){
       case 'Flappy':
+        img = this.imgControl.getImage('flappy')
         break;
       case "Wall":
-        this.objects.registerImage(id, new AbstractObj(
-          position, vel, accel, width, height,
-          id, this.imgControl.getImage('cano')
-        ))
+        img = this.imgControl.getImage('cano')
         break;
     }
+
+    this.objects.registerImage(id, new AbstractObj(
+      position, vel, accel, width, height,
+      id, img
+    ))
   }
 }
