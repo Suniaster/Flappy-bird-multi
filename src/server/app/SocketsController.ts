@@ -58,7 +58,7 @@ export default class SocketsController{
 
           this.gameController.isRunning = true;
           this.gameTimer = setInterval(
-            this.PassTime(), 
+            this.PassTime, 
             1000/this.frameRate
           );
         } 
@@ -81,22 +81,21 @@ export default class SocketsController{
   }
 
   /** GAME FUNCTIONS */
-  private PassTime(){
-    return ()=>{
-      if (!this.gameController.isRunning){
-        clearInterval(this.gameTimer);
-        this.gameController.resetGame();
-        this.sendToAllConnections('game-end', {})
-      }
-      else{
-        if(this.gameController.deletedObjs.length != 0){
-          this.sendToAllConnections('objects-destroyed', {
-            ids: this.gameController.deletedObjs
-          })
-          this.gameController.deletedObjs = []
-        }
-        this.gameController.passTime();
-      }
+  private PassTime = () => {
+    if(this.gameController.deletedObjs.length != 0){
+      this.sendToAllConnections('objects-destroyed', {
+        ids: this.gameController.deletedObjs
+      })
+      this.gameController.deletedObjs = []
+    }
+
+    if (!this.gameController.isRunning){
+      clearInterval(this.gameTimer);
+      this.gameController.resetGame();
+      this.sendToAllConnections('game-end', {})
+    }
+    else{
+      this.gameController.passTime();
     }
   }
 

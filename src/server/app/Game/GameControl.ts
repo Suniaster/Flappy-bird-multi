@@ -49,8 +49,8 @@ export default class GameControl{
     //   this.createWall();
     // }
 
-    this.verifyCollisions();
     this.updateObjectsPos();
+    this.verifyCollisions();
     this.time+=1;
 
     this.isRunning = this.AnyFlappyAlive();
@@ -140,7 +140,7 @@ export default class GameControl{
       } 
       return accumulator
     }, []);
-    this.deletedObjs.concat(killedObjs)
+    this.deletedObjs = this.deletedObjs.concat(killedObjs)
   }
 
   private AnyFlappyAlive():boolean{
@@ -151,6 +151,6 @@ export default class GameControl{
 
   private updateObjectsPos():void{
     var deleted_objs = this.objController.moveAllObjs({x:this.world.width, y: this.world.height})
-    this.deletedObjs.concat(deleted_objs);
+    this.deletedObjs = this.deletedObjs.concat(deleted_objs);
   }
 }
