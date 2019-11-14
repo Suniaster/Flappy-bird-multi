@@ -19,7 +19,7 @@ class Menu{
 
   startGameEvent = () =>{
     if(this.socket != null){
-      this.socket.emit('gameStart', null);
+      this.socket.emit('game-start');
     }
   }
 

@@ -74,4 +74,12 @@ class GameWindow{
       id, img
     ))
   }
+
+  clientJump(){
+    let id = this.socket.id
+    if(this.objects.idExists(id)){
+      let obj = this.objects.getObject(id)
+      obj.jump(-15)
+    }
+  }
 }

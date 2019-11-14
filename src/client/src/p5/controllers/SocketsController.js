@@ -10,17 +10,17 @@ class SocketsController{
     this.socket = io();
 
 
-    this.socket.on("gameStart", (data)=>{
+    this.socket.on("game-start", (data)=>{
       // this.gameController.setWindowSize(data.window.x, data.window.y);
       this.gameController.menu.initGame();
-      console.log(data)
       for(let i=0;i<data.birds.ids.length;i+=1){
         let id = data.birds.ids[i]
         this.gameController.createFlappy(id)
       }
     })
 
-    this.socket.on("Object-created", (data)=>{
+    this.socket.on("object-created", (data)=>{
+      console.log("Object "+data.id+" created")
       this.gameController.createObject(
         data.symbol, 
         data.position, 
@@ -32,11 +32,14 @@ class SocketsController{
       )
     })
 
-    this.socket.on("Object-destroyed", (data)=>{
-      this.gameController.objects.unregisterObject(data.id)
+    this.socket.on("objects-destroyed", (data)=>{
+      data.ids.map((id)=>{
+        console.log("Object "+id+" destroyed")
+        this.gameController.objects.unregisterObject(id)
+      })
     })
 
-    this.socket.on("gameEnd", ()=>{
+    this.socket.on("game-end", ()=>{
       //TODO: fazer fim de jogo
     })
 
@@ -45,7 +48,5 @@ class SocketsController{
       this.gameController.objects.getObject(data.id).jump(data.vel_y)
     })
   }
-
-
 
 }

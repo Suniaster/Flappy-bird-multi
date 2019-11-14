@@ -2,6 +2,7 @@ class ObjectController{
   constructor(){
     this.objects = {}
   }
+
   getObject(id){
     return this.objects[id]
   }
@@ -13,6 +14,11 @@ class ObjectController{
     delete this.objects[name]
   }
 
+  idExists(id){
+    if(this.objects[id] != undefined)
+      return true
+    return false
+  }
 
   moveAndDrawAllObjs(){
     for(let i in this.objects){

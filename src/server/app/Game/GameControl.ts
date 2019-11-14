@@ -19,7 +19,7 @@ export default class GameControl{
   objController: ObejctController;
 
   newObjs: AbstractThing[];
-  deletedObjs: AbstractThing[];
+  deletedObjs: String[];
 
   constructor(grid_size:number[]= [500, 500]){
     this.world = {
@@ -78,9 +78,8 @@ export default class GameControl{
     this.time = 0;
   }
 
-
-  public jump(id: string):void{
-    this.objController.getById(id).jump()
+  public jump(id: string):AbstractThing{
+    return this.objController.getById(id).jump()
   }
 
   //*** PRIVATE PART ****//
@@ -126,10 +125,22 @@ export default class GameControl{
     this.objController.registerWithObjId(newWall2);
   }
 
-  private verifyCollisions(){
-    let colided;
+  private verifyCollisions():void{
     var cols = this.objController.getCollisions();
-    // console.log(cols);
+
+    let killedObjs:String[] = []
+    killedObjs = cols.reduce((accumulator, now)=>{
+      if(now[0].symbol != now[1].symbol){
+        if(now[0].symbol == "Flappy")
+          accumulator.push(now[0].id);
+          this.objController.delete(now[0].id)
+        if(now[1].symbol == "Flappy")
+          this.objController.delete(now[1].id)
+          accumulator.push(now[1].id);
+      } 
+      return accumulator
+    }, []);
+    this.deletedObjs.concat(killedObjs)
   }
 
   private AnyFlappyAlive():boolean{
@@ -138,7 +149,7 @@ export default class GameControl{
     return true;
   }
 
-  private updateObjectsPos(){
+  private updateObjectsPos():void{
     var deleted_objs = this.objController.moveAllObjs({x:this.world.width, y: this.world.height})
     this.deletedObjs.concat(deleted_objs);
   }

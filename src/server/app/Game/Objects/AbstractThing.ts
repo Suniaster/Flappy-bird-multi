@@ -45,7 +45,8 @@ export default abstract class AbstractThing{
     }
   }
 
-  public jump():void{
+  public jump():AbstractThing{
     this.velocity.y = -15
+    return this
   }
 }

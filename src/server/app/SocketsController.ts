@@ -33,21 +33,20 @@ export default class SocketsController{
       })
 
 
-
       //** Game Listeners **/
       socket.on("jump", (data)=>{
-        if(this.gameController.isRunning)
-          this.gameController.jump(data.id)
-          let obj = this.gameController.objController.getById(data.id)
-          socket.emit("jump", {id: data.id, vel_y: obj.velocity.y})
+        if(this.gameController.isRunning){
+          let obj = this.gameController.jump(data.id)
+          socket.broadcast.emit("jump", {id: data.id, vel_y: obj.velocity.y})
+        }
       })
 
-      socket.on("gameStart", (data)=>{
+      socket.on("game-start", (data)=>{
         if(!this.gameController.isRunning){
-          let ids = this.connections.map( v=> v.id)
+          let ids = this.connections.map(v=> v.id)
           this.gameController.createBirds(ids)
 
-          this.sendToAllConnections("gameStart",{
+          this.sendToAllConnections("game-start",{
             window: {
               width:  this.gameController.world.width,
               height: this.gameController.world.height
@@ -87,9 +86,15 @@ export default class SocketsController{
       if (!this.gameController.isRunning){
         clearInterval(this.gameTimer);
         this.gameController.resetGame();
-        this.sendToAllConnections('gameEnd', {})
+        this.sendToAllConnections('game-end', {})
       }
       else{
+        if(this.gameController.deletedObjs.length != 0){
+          this.sendToAllConnections('objects-destroyed', {
+            ids: this.gameController.deletedObjs
+          })
+          this.gameController.deletedObjs = []
+        }
         this.gameController.passTime();
       }
     }

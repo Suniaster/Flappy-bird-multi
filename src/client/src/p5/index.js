@@ -34,7 +34,7 @@ function keyPressed(){
   console.log(keyCode)
   switch(keyCode){
     case 87: // W
-      socketControl.socket.emit('jump', {id:socketControl.socket.id});
+      game.clientJump()
       break;
     case 68: // D
       break;

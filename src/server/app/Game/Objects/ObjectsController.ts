@@ -61,20 +61,19 @@ export default class ObejctController{
    * 
    * @param max_pos 
    * @param min_pos 
-   * @returns List with all invalid (deleted) objects
+   * @returns List with id of (deleted) objects
    */
-  moveAllObjs(max_pos:Point={x:1000000, y:1000000}, min_pos:Point={x:0,y:0}): AbstractThing[]{
-    return Object.values(this.objects).filter((obj)=>{
+  moveAllObjs(max_pos:Point={x:1000000, y:1000000}, min_pos:Point={x:0,y:0}): String[]{
+    return Object.values(this.objects).reduce((acc,obj)=>{
       obj.move();
       if(
         obj.position.x < min_pos.x || obj.position.x > max_pos.x ||
         obj.position.y < min_pos.y || obj.position.y > max_pos.y
       ){
         this.delete(obj.id);
-        return true;
+        acc.push(obj.id)
       }
-      return false;
-    })
+      return acc;
+    }, [])
   }
-
 }
