@@ -9,12 +9,35 @@
     "jump":{
       "":""
     },
-    "gameStart":{
+    "game-start":{
       "":""
+    },
+    "check-time":{
+      "time":"number"
     }
   },
 
   "emitter":{
+
+    "sync-game":{
+      "time":"number",
+      "objects":"object_info[]",
+      "object_info":{
+        "id":"string",
+        "position":{
+          "x":"Number",
+          "y": "Number"
+        },
+        "vel":{
+          "x":"Number",
+          "y": "Number"
+        },
+        "accel":{
+          "x":"Number",
+          "y": "Number"
+        }
+      }
+    },
 
     "game-start":{
       "window":{
@@ -50,7 +73,7 @@
       "id": "String"
     },
 
-    "gameEnd":{
+    "game-end":{
       "":""
     },
 

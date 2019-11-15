@@ -15,7 +15,7 @@ export default class SocketsController{
     this.io = Socket(serverController.server,{});
     this.connections = []
 
-    this.frameRate = 50;
+    this.frameRate = 60;
     this.now = new Date();
   }
 
@@ -28,7 +28,7 @@ export default class SocketsController{
       //** Socket Listeners **/
       socket.on("disconnect", (data)=>{
         this.removeSocket(socket.id);
-        this.sendToAllConnections('playerDisconnected', {
+        this.io.sockets.emit('playerDisconnected', {
           id: socket.id
         })
         console.log('Disconnected');
@@ -50,7 +50,7 @@ export default class SocketsController{
           let ids = this.connections.map(v=> v.id)
           this.gameController.createBirds(ids)
 
-          this.sendToAllConnections("game-start",{
+          this.io.sockets.emit("game-start",{
             window: {
               width:  this.gameController.world.width,
               height: this.gameController.world.height
@@ -67,6 +67,19 @@ export default class SocketsController{
           );
         } 
       })
+
+
+      socket.on("check-time", (data)=>{
+        let client_time = data.time;
+        let time_dif    = Math.abs(client_time - this.gameController.time)
+        if( time_dif > 3 ){
+          console.log(`Game ${socket.id} Not sync -> client=${client_time} server=${ this.gameController.time}`)
+          socket.emit("sync-game",{
+            time: this.gameController.time,
+            objects: this.gameController.getObjectsPositionValues()
+          })
+        }
+      })
     })
   }
 
@@ -78,20 +91,11 @@ export default class SocketsController{
     }
   }
 
-  sendToAllConnections(eventName:string ,message: Object){
-    this.connections.forEach((con)=>{
-      con.emit(eventName, message);
-    })
-  }
-
   /** GAME FUNCTIONS */
   private PassTime = () => {
-    var aux = new Date();
-    var runtime = (aux.getMilliseconds() - this.now.getMilliseconds())
-    console.log("FPS: " + (runtime/1000));
     //* handling deleted objects
     if(this.gameController.deletedObjs.length != 0){
-      this.sendToAllConnections('objects-destroyed', {
+      this.io.sockets.emit('objects-destroyed', {
         ids: this.gameController.deletedObjs
       })
       this.gameController.deletedObjs = []
@@ -102,7 +106,7 @@ export default class SocketsController{
     if (!this.gameController.isRunning){
       clearInterval(this.gameTimer);
       this.gameController.resetGame();
-      this.sendToAllConnections('game-end', {})
+      this.io.sockets.emit('game-end')
     }
 
     //** Handling time **//
@@ -110,7 +114,6 @@ export default class SocketsController{
       this.gameController.passTime();
     }
 
-    this.now = new Date();
   }
 
 }

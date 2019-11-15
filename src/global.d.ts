@@ -16,6 +16,14 @@ interface ObjectInfoMessage{
     x:number,
     y:number
   },
+  vel:{
+    x:number,
+    y: number
+  },
+  accel:{
+    x:number,
+    y: number
+  }
   symbol:string,
   width: number,
   height: number,

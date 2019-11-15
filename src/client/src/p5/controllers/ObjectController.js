@@ -20,6 +20,12 @@ class ObjectController{
     return false
   }
 
+  updateObj(id, pos, vel, accel){
+    this.objects[id].position = pos;
+    this.objects[id].vel      = vel;
+    this.objects[id].accel    = accel;
+  }
+
   moveAndDrawAllObjs(){
     for(let i in this.objects){
       let obj = this.objects[i]

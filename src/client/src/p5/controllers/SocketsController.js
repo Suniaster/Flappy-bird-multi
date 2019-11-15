@@ -3,7 +3,7 @@
 class SocketsController{
   constructor(gameController){
     this.gameController = gameController
-    this.socket = undefined
+    this.socket         = undefined
   }
 
   startConnection(){
@@ -41,12 +41,28 @@ class SocketsController{
 
     this.socket.on("game-end", ()=>{
       //TODO: fazer fim de jogo
+      this.gameController.menu.drawMenu()
+      this.gameController.time=0;
+      this.gameController.menu.gameRunning = false;
     })
-
 
     this.socket.on("jump", (data)=>{
       this.gameController.objects.getObject(data.id).jump(data.vel_y)
     })
+
+    this.socket.on("sync-game", (data)=>{
+      console.log(data)
+      data.objects.forEach((obj)=>{
+        this.gameController.objects.updateObj(
+          obj.id,
+          obj.position,
+          obj.vel,
+          obj.accel
+        )
+      })
+      this.gameController.time = data.time;
+    })
+
   }
 
 }

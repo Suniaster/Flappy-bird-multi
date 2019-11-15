@@ -17,9 +17,7 @@ export default abstract class AbstractThing{
        result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
- }
- 
- 
+  }
 
   public move(){
     this.updateVel();
@@ -36,7 +34,15 @@ export default abstract class AbstractThing{
     return {
       position:{
         x: this.position.x,
-        y: this.position.y,
+        y: this.position.y
+      },
+      vel:{
+        x: this.velocity.x,
+        y: this.velocity.y
+      },
+      accel:{
+        x: this.accel.x,
+        y: this.accel.y
       },
       symbol: this.symbol,
       width: this.width,
