@@ -35,9 +35,11 @@ export default class SocketsController{
 
       //** Game Listeners **/
       socket.on("jump", (data)=>{
-        if(this.gameController.isRunning){
-          let obj = this.gameController.jump(data.id)
-          socket.broadcast.emit("jump", {id: data.id, vel_y: obj.velocity.y})
+        let id = socket.id
+        if(this.gameController.isRunning &&
+          this.gameController.objController.getById(id) !== undefined){
+          let obj = this.gameController.jump(id)
+          socket.broadcast.emit("jump", {id: id, vel_y: obj.velocity.y})
         }
       })
 
