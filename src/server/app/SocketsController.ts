@@ -10,11 +10,13 @@ export default class SocketsController{
 
   private gameTimer:NodeJS.Timeout;
 
+  now:Date
   constructor(private serverController: any, private gameController: GameControl){
     this.io = Socket(serverController.server,{});
     this.connections = []
 
-    this.frameRate = 60;
+    this.frameRate = 50;
+    this.now = new Date();
   }
 
   initConnectionsHandler(): void{
@@ -84,6 +86,10 @@ export default class SocketsController{
 
   /** GAME FUNCTIONS */
   private PassTime = () => {
+    var aux = new Date();
+    var runtime = (aux.getMilliseconds() - this.now.getMilliseconds())
+    console.log("FPS: " + (runtime/1000));
+    //* handling deleted objects
     if(this.gameController.deletedObjs.length != 0){
       this.sendToAllConnections('objects-destroyed', {
         ids: this.gameController.deletedObjs
@@ -91,14 +97,20 @@ export default class SocketsController{
       this.gameController.deletedObjs = []
     }
 
+
+    //** Handling game end */
     if (!this.gameController.isRunning){
       clearInterval(this.gameTimer);
       this.gameController.resetGame();
       this.sendToAllConnections('game-end', {})
     }
+
+    //** Handling time **//
     else{
       this.gameController.passTime();
     }
+
+    this.now = new Date();
   }
 
 }

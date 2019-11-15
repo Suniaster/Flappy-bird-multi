@@ -13,7 +13,7 @@ function preload() {
 function setup() {
   let canv = createCanvas(game.size.x, game.size.y);
   canv.position(0, 0);
-  frameRate(60);
+  frameRate(50);
 
   game.createFlappy(socketControl.socket.id)
   game.setup()
