@@ -11,9 +11,6 @@
     },
     "game-start":{
       "":""
-    },
-    "check-time":{
-      "time":"number"
     }
   },
 
@@ -21,6 +18,7 @@
 
     "sync-game":{
       "time":"number",
+      "tickrate":"number",
       "objects":"object_info[]",
       "object_info":{
         "id":"string",
@@ -49,20 +47,8 @@
       }
     },
 
-    "object-created":{
-      "width": "Number",
-      "height": "number",
-      "position":{
-        "x": "Number", "y": "Number"
-      },
-      "vel":{
-        "x": "Number", "y": "Number"
-      },
-      "accel":{
-        "x": "Number", "y": "Number"
-      },
-      "id": "String",
-      "symbol": "String"
+    "objects-created":{
+      "objects": "objectinfoMessage[]"
     },
 
     "objects-destoyed":{
