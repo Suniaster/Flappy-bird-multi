@@ -124,14 +124,14 @@ export default class GameControl{
 
 
     var newWall = new Wall({
-        x:this.world.height-1, y:0
+        x:this.world.width-1, y:0
       }, 
       wallThickness, pos_y - wallGap/2, 
       "up" + Wall.makeid(7)
     );
 
     var newWall2 = new Wall({
-        x:this.world.height-1, y: pos_y + wallGap/2
+        x:this.world.width-1, y: pos_y + wallGap/2
       }, 
       wallThickness , this.world.height-(pos_y + wallGap/2), 
       "down"+ Wall.makeid(7)
