@@ -1,11 +1,9 @@
 import AbstractNet from "./AbstractNet";
 import { Network, Neuron } from "synaptic";
-import { Hash } from "crypto";
 
 export default class GeneticNet extends AbstractNet{
 
   public static mutationRate:number = 0.2;
-
 
   public static crossOver(network1:Network, network2: Network, key:string){
     var a = network1.neurons();

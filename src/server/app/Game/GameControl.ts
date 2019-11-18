@@ -2,7 +2,8 @@ import Bird from "./Objects/GameObjects/Bird";
 import Wall from "./Objects/GameObjects/Wall";
 import AbstractThing from "./Objects/AbstractThing";
 import CollisionController from "./Objects/Collision/CollisionController";
-import ObejctController from "./Objects/ObjectsController";
+import ObjectController from "./Objects/ObjectsController";
+import NeuralBirds from "./Neural/NeuralBirds";
 
 
 
@@ -20,12 +21,12 @@ export default class GameControl{
   }
 
   // Objects Control
-  objController: ObejctController;
+  objController: ObjectController;
 
   // Flappy
   wallSpawnTime:number;
   wallUpgradeTime:number
-
+  nBirds:NeuralBirds;
 
   constructor(grid_size:number[]= [500, 500]){
     this.world = {
@@ -34,7 +35,7 @@ export default class GameControl{
     }
 
     //* Controle dos objetos *//
-    this.objController = new ObejctController();
+    this.objController = new ObjectController();
 
     //* Controle geral *//
     this.time = 0;
@@ -42,7 +43,8 @@ export default class GameControl{
     
     //**Variaveis do flappy **/
     this.wallSpawnTime = 160;
-    this.wallUpgradeTime = 400
+    this.wallUpgradeTime = 400;
+    this.nBirds = new NeuralBirds(this.objController);
   }
 
   /**
@@ -54,8 +56,12 @@ export default class GameControl{
       this.createWall();
     }
 
+    this.nBirds.perform();
+
     this.updateObjectsPos();
     this.verifyCollisions();
+
+    this.nBirds.checkKilledBirds(this.time);
     this.time+=1;
 
     this.isRunning = this.AnyFlappyAlive();
@@ -79,8 +85,13 @@ export default class GameControl{
 
   public resetGame():void{
     this.isRunning = false;
-    this.objController = new ObejctController();
+    this.objController.reset()
     this.time = 0;
+
+
+    // Net
+    this.nBirds.printScores();
+    this.nBirds.generateNewBatch();
   }
 
   public jump(id: string):AbstractThing{
@@ -88,24 +99,6 @@ export default class GameControl{
   }
 
   //*** PRIVATE PART ****//
-  /**
-   * Wall:
-   * 
-   *    *-------------------*
-   *    |            *      |
-   *    |                   |
-   *    |                   |
-   *    |                   |
-   *    |                   |
-   *    |                   |
-   *    |            *      |
-   *    |                   |
-   *    |                   |
-   *    |                   |
-   *    *-------------------*
-   * 
-   * aa
-   */
   private createWall(vel_x:number=-2){
     var wallGap = 200;
     var wallThickness = 100;
@@ -117,14 +110,14 @@ export default class GameControl{
         x:this.world.width-1, y:0
       }, 
       wallThickness, pos_y - wallGap/2, 
-      "up" + Wall.makeid(7)
+      "wall-up" + Wall.makeid(7)
     );
 
     var newWall2 = new Wall({
         x:this.world.width-1, y: pos_y + wallGap/2
       }, 
       wallThickness , this.world.height-(pos_y + wallGap/2), 
-      "down"+ Wall.makeid(7)
+      "wall-down"+ Wall.makeid(7)
     );
     ////** Saving Objects
     this.objController.registerWithObjId(newWall);

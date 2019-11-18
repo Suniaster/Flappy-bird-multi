@@ -3,7 +3,7 @@ import CollisionController from "./Collision/CollisionController";
 
 
 
-export default class ObejctController{
+export default class ObjectController{
   objects: {[id:string]: AbstractThing}
 
   buffer: {
@@ -20,8 +20,10 @@ export default class ObejctController{
     }
   }
 
+  //* Load/Unload
   register(id:string, obj: AbstractThing):AbstractThing{
     this.objects[id] = obj
+    this.buffer.createdObjs.push(obj)
     return obj
   }
 
@@ -38,6 +40,15 @@ export default class ObejctController{
     return copy;
   }
 
+  reset(){
+    this.objects = {}
+    this.buffer = {
+      createdObjs: [],
+      deletedIds: []
+    }
+  }
+
+  //* Getters
   getObjValues():ObjectInfoMessage[]{
     let retList = []
     for( let i in this.objects){
@@ -55,6 +66,10 @@ export default class ObejctController{
     return Object.values(this.objects).filter(v => v.symbol === symbol);
   }
 
+  getObjThatIdStartsWith(some_string:string):AbstractThing[]{
+    return Object.values(this.objects).filter(v => v.id.startsWith(some_string));
+  }
+
   getCollisions(): [AbstractThing, AbstractThing][]{
     let collisionList = []
     let keys = Object.keys(this.objects);
@@ -69,6 +84,7 @@ export default class ObejctController{
     return collisionList
   }
 
+  //* Logic operations
   /**
    * 
    * @param max_pos 
@@ -87,5 +103,18 @@ export default class ObejctController{
       }
       return acc;
     }, [])
+  }
+
+  findObjectLessDistance(obj:AbstractThing, id_prefix, axis:'x'|'y'='x'):AbstractThing{
+    let min_dist = 100000;
+    let ret_obj;
+    this.getObjThatIdStartsWith(id_prefix).forEach((val)=>{
+      if(val.position.x - obj.position.x < min_dist){
+        min_dist = val.position.x - obj.position.x;
+        ret_obj = val;
+      } 
+    })
+
+    return ret_obj;
   }
 }
