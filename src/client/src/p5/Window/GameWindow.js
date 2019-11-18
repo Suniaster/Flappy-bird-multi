@@ -76,15 +76,6 @@ class GameWindow{
   }
 
   clientJump(){
-
-    let id = this.socket.id
-    let obj = this.objects.getObject(id)
-
-    // Client jump
-    if(obj != undefined) obj.jump(-15)
-
-    // Server Jump
     this.socket.emit('jump')
-
   }
 }

@@ -41,7 +41,7 @@ export default class SocketsController{
         if(this.gameController.isRunning &&
           this.gameController.objController.getById(id) !== undefined){
           let obj = this.gameController.jump(id)
-          socket.broadcast.emit("jump", {id: id, vel_y: obj.velocity.y})
+          this.io.sockets.emit("jump", {id: id, vel_y: obj.velocity.y})
         }
       })
 
