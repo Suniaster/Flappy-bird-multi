@@ -8,10 +8,17 @@ class GameWindow{
     this.imgControl = new ImageController();
 
     this.size = {
-      x: 1000, y:1000
+      x: 2000, y:800
     }
     this.socket = null;
     this.time = 0;
+  }
+
+  reset(){
+    this.menu.drawMenu()
+    this.time=0;
+    this.menu.gameRunning = false;
+    this.objects.reset()
   }
 
   //**  P5 Methods   **//
@@ -69,10 +76,12 @@ class GameWindow{
         break;
     }
 
-    this.objects.registerImage(id, new AbstractObj(
+    let newObj = new AbstractObj(
       position, vel, accel, width, height,
       id, img
-    ))
+    );
+    console.log(newObj)
+    this.objects.registerObject(id, newObj); 
   }
 
   clientJump(){

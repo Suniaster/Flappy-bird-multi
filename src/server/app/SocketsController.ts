@@ -5,18 +5,40 @@ export default class SocketsController{
 
   io: Socket.Server;
   connections: Socket.Socket[];
-  private frameRate :number;
 
+  // Vel functions
+  private simulation_rate: number;
+  private update_rate: number;
 
-  private gameTimer:NodeJS.Timeout;
+  // Timers
+  private timers:{
+    simulation: NodeJS.Timeout,
+    sync: NodeJS.Timeout
+  };
 
-  now:Date
+  timeControl : {
+    time1: Date,
+    time2?: Date,
+    counter1: number,
+    counter2?: number,
+  }
+
   constructor(private serverController: any, private gameController: GameControl){
     this.io = Socket(serverController.server,{});
     this.connections = []
 
-    this.frameRate = 60;
-    this.now = new Date();
+    this.simulation_rate = 60;
+    this.update_rate = 20;
+
+    this.timeControl = {
+      time1: new Date(),
+      counter1: 0,
+    }
+
+    this.timers = {
+      simulation: null,
+      sync: null
+    }
   }
 
   initConnectionsHandler(): void{
@@ -61,24 +83,22 @@ export default class SocketsController{
           })
 
           this.gameController.isRunning = true;
-          this.gameTimer = setInterval(
-            this.PassTime, 
-            1000/this.frameRate
+          this.timers.simulation = setInterval(
+            this.simulateGame, 
+            1000/this.simulation_rate
           );
+
+          this.timeControl = {
+            time1: new Date(),
+            counter1: this.gameController.time
+          }
+
+          this.timers.sync = setInterval(
+            this.syncGames,
+            1000/this.update_rate
+          )
+
         } 
-      })
-
-
-      socket.on("check-time", (data)=>{
-        let client_time = data.time;
-        let time_dif    = Math.abs(client_time - this.gameController.time)
-        if( time_dif > 3 ){
-          console.log(`Game ${socket.id} Not sync -> client=${client_time} server=${ this.gameController.time}`)
-          socket.emit("sync-game",{
-            time: this.gameController.time,
-            objects: this.gameController.getObjectsPositionValues()
-          })
-        }
       })
     })
   }
@@ -92,19 +112,32 @@ export default class SocketsController{
   }
 
   /** GAME FUNCTIONS */
-  private PassTime = () => {
+  private simulateGame = () => {
     //* handling deleted objects
-    if(this.gameController.deletedObjs.length != 0){
+    if(this.gameController.buffer.deletedIds.length != 0){
       this.io.sockets.emit('objects-destroyed', {
-        ids: this.gameController.deletedObjs
+        ids: this.gameController.buffer.deletedIds
       })
-      this.gameController.deletedObjs = []
+      this.gameController.buffer.deletedIds = []
     }
 
+    //* handling deleted created objs
+    if(this.gameController.buffer.createdObjs.length != 0 ){
+      let values =  this.gameController.buffer.createdObjs.reduce((acc, curr)=>{
+        acc.push(curr.getValues())
+        return acc;
+      }, [])
+      this.io.sockets.emit('objects-created', {
+        objects: values
+      })
+      this.gameController.buffer.createdObjs = [];
+    }
 
     //** Handling game end */
     if (!this.gameController.isRunning){
-      clearInterval(this.gameTimer);
+      clearInterval(this.timers.simulation);
+      clearInterval(this.timers.sync);
+
       this.gameController.resetGame();
       this.io.sockets.emit('game-end')
     }
@@ -114,6 +147,29 @@ export default class SocketsController{
       this.gameController.passTime();
     }
 
+  }
+
+
+  private syncGames = () =>{
+    //* Calculating Tick
+    // let timepassed = this.timeControl.time1.getTime() - new Date().getTime()  
+    // let simulation_counter = this.gameController.time - this.timeControl.counter1
+    // let tick = timepassed/simulation_counter;
+
+    // let frame_rate = 1000/tick
+
+    //* Updating variables
+    // this.timeControl = {
+    //   time1: new Date(),
+    //   counter1: this.gameController.time
+    // }
+
+    // Emiting sync event
+    this.io.sockets.emit("sync-game",{
+      time: this.gameController.time,
+      // tickrate: tick,
+      objects: this.gameController.getObjectsPositionValues()
+    })
   }
 
 }

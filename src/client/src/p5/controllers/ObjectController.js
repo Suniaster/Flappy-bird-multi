@@ -3,6 +3,9 @@ class ObjectController{
     this.objects = {}
   }
 
+  reset(){
+    this.objects = {}
+  }
   getObject(id){
     return this.objects[id]
   }

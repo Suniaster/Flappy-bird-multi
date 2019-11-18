@@ -8,18 +8,29 @@ import ObejctController from "./Objects/ObjectsController";
 
 
 export default class GameControl{
+  
+  // Time controll
   time: number;
   isRunning: boolean;
-  wallDistance:number;
+
+  // Grid Control
   world: {
     width: number,
     height: number
   }
 
+  // Objects Control
   objController: ObejctController;
-
   newObjs: AbstractThing[];
-  deletedObjs: String[];
+  buffer: {
+    deletedIds: String[],
+    createdObjs: AbstractThing[]
+  };
+
+  // Flappy
+  wallSpawnTime:number;
+  wallUpgradeTime:number
+
 
   constructor(grid_size:number[]= [500, 500]){
     this.world = {
@@ -30,14 +41,18 @@ export default class GameControl{
     //* Controle dos objetos *//
     this.objController = new ObejctController();
     this.newObjs = [];
-    this.deletedObjs = [];
+    this.buffer = {
+      deletedIds: [],
+      createdObjs: []
+    };
 
     //* Controle geral *//
     this.time = 0;
     this.isRunning = false;
     
     //**Variaveis do flappy **/
-    this.wallDistance = 50;
+    this.wallSpawnTime = 160;
+    this.wallUpgradeTime = 400
   }
 
   /**
@@ -45,9 +60,9 @@ export default class GameControl{
    */
   public passTime(): boolean{
 
-    // if( this.time%this.wallDistance == 0){
-    //   this.createWall();
-    // }
+    if( this.time%this.wallSpawnTime == 0){
+      this.createWall();
+    }
 
     this.updateObjectsPos();
     this.verifyCollisions();
@@ -101,28 +116,32 @@ export default class GameControl{
    * 
    * aa
    */
-  private createWall(){
+  private createWall(vel_x:number=-2){
     var wallGap = 200;
     var wallThickness = 100;
 
     var pos_y = Wall.CalculateRandomPosition(this.world.height, 0.25);
-    // var pos_y = Math.floor(this.grid.rows/4);
+
+
     var newWall = new Wall({
         x:this.world.height-1, y:0
       }, 
-    wallThickness, pos_y - wallGap/2, 
-    "up" + Wall.makeid(7)
+      wallThickness, pos_y - wallGap/2, 
+      "up" + Wall.makeid(7)
     );
 
     var newWall2 = new Wall({
         x:this.world.height-1, y: pos_y + wallGap/2
       }, 
-    wallThickness , this.world.height-(pos_y + wallGap/2), 
-    "down"+ Wall.makeid(7)
+      wallThickness , this.world.height-(pos_y + wallGap/2), 
+      "down"+ Wall.makeid(7)
     );
-    
+    ////** Saving Objects
     this.objController.registerWithObjId(newWall);
     this.objController.registerWithObjId(newWall2);
+    
+    this.buffer.createdObjs.push(newWall);
+    this.buffer.createdObjs.push(newWall2);
   }
 
   private verifyCollisions():void{
@@ -140,7 +159,7 @@ export default class GameControl{
       } 
       return accumulator
     }, []);
-    this.deletedObjs = this.deletedObjs.concat(killedObjs)
+    this.buffer.deletedIds = this.buffer.deletedIds.concat(killedObjs)
   }
 
   private AnyFlappyAlive():boolean{
@@ -151,6 +170,6 @@ export default class GameControl{
 
   private updateObjectsPos():void{
     var deleted_objs = this.objController.moveAllObjs({x:this.world.width, y: this.world.height})
-    this.deletedObjs = this.deletedObjs.concat(deleted_objs);
+    this.buffer.deletedIds = this.buffer.deletedIds.concat(deleted_objs);
   }
 }
