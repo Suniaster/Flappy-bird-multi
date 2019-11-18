@@ -21,11 +21,6 @@ export default class GameControl{
 
   // Objects Control
   objController: ObejctController;
-  newObjs: AbstractThing[];
-  buffer: {
-    deletedIds: String[],
-    createdObjs: AbstractThing[]
-  };
 
   // Flappy
   wallSpawnTime:number;
@@ -40,11 +35,6 @@ export default class GameControl{
 
     //* Controle dos objetos *//
     this.objController = new ObejctController();
-    this.newObjs = [];
-    this.buffer = {
-      deletedIds: [],
-      createdObjs: []
-    };
 
     //* Controle geral *//
     this.time = 0;
@@ -139,27 +129,20 @@ export default class GameControl{
     ////** Saving Objects
     this.objController.registerWithObjId(newWall);
     this.objController.registerWithObjId(newWall2);
-    
-    this.buffer.createdObjs.push(newWall);
-    this.buffer.createdObjs.push(newWall2);
+
   }
 
   private verifyCollisions():void{
-    var cols = this.objController.getCollisions();
+    let cols = this.objController.getCollisions();
 
-    let killedObjs:String[] = []
-    killedObjs = cols.reduce((accumulator, now)=>{
+    cols.forEach((now)=>{
       if(now[0].symbol != now[1].symbol){
         if(now[0].symbol == "Flappy")
-          accumulator.push(now[0].id);
           this.objController.delete(now[0].id)
         if(now[1].symbol == "Flappy")
           this.objController.delete(now[1].id)
-          accumulator.push(now[1].id);
       } 
-      return accumulator
-    }, []);
-    this.buffer.deletedIds = this.buffer.deletedIds.concat(killedObjs)
+    });
   }
 
   private AnyFlappyAlive():boolean{
@@ -169,7 +152,6 @@ export default class GameControl{
   }
 
   private updateObjectsPos():void{
-    var deleted_objs = this.objController.moveAllObjs({x:this.world.width, y: this.world.height})
-    this.buffer.deletedIds = this.buffer.deletedIds.concat(deleted_objs);
+    let deleted_objs = this.objController.moveAllObjs({x:this.world.width, y: this.world.height})
   }
 }

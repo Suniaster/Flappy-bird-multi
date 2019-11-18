@@ -6,8 +6,18 @@ import CollisionController from "./Collision/CollisionController";
 export default class ObejctController{
   objects: {[id:string]: AbstractThing}
 
+  buffer: {
+    createdObjs: AbstractThing[],
+    deletedIds: String[]
+  }
+
+
   constructor(){
     this.objects = {}
+    this.buffer = {
+      createdObjs: [],
+      deletedIds: []
+    }
   }
 
   register(id:string, obj: AbstractThing):AbstractThing{
@@ -17,12 +27,14 @@ export default class ObejctController{
 
   registerWithObjId(obj:AbstractThing){
     this.objects[obj.id] = obj
+    this.buffer.createdObjs.push(obj)
     return obj
   }
 
   delete(id: string){
     let copy = this.objects[id]
     delete this.objects[id]
+    this.buffer.deletedIds.push(id);
     return copy;
   }
 

@@ -114,23 +114,23 @@ export default class SocketsController{
   /** GAME FUNCTIONS */
   private simulateGame = () => {
     //* handling deleted objects
-    if(this.gameController.buffer.deletedIds.length != 0){
+    if(this.gameController.objController.buffer.deletedIds.length != 0){
       this.io.sockets.emit('objects-destroyed', {
-        ids: this.gameController.buffer.deletedIds
+        ids: this.gameController.objController.buffer.deletedIds
       })
-      this.gameController.buffer.deletedIds = []
+      this.gameController.objController.buffer.deletedIds = []
     }
 
     //* handling deleted created objs
-    if(this.gameController.buffer.createdObjs.length != 0 ){
-      let values =  this.gameController.buffer.createdObjs.reduce((acc, curr)=>{
+    if(this.gameController.objController.buffer.createdObjs.length != 0 ){
+      let values =  this.gameController.objController.buffer.createdObjs.reduce((acc, curr)=>{
         acc.push(curr.getValues())
         return acc;
       }, [])
       this.io.sockets.emit('objects-created', {
         objects: values
       })
-      this.gameController.buffer.createdObjs = [];
+      this.gameController.objController.buffer.createdObjs = [];
     }
 
     //** Handling game end */
