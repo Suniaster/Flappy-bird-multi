@@ -2,11 +2,11 @@ export default abstract class AbstractThing{
 
   static gravity = 1;
 
-  public velocity:Point;
-  public accel: Point;
+  public velocity:Vector;
+  public accel: Vector;
   public symbol:string;
 
-  constructor(public position:Point, public width, public height, public id:string){
+  constructor(public position:Vector, public width, public height, public id:string){
   }
   
   static makeid(length) {

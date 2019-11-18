@@ -63,7 +63,7 @@ export default class ObejctController{
    * @param min_pos 
    * @returns List with id of (deleted) objects
    */
-  moveAllObjs(max_pos:Point={x:1000000, y:1000000}, min_pos:Point={x:0,y:0}): String[]{
+  moveAllObjs(max_pos:Vector={x:1000000, y:1000000}, min_pos:Vector={x:0,y:0}): String[]{
     return Object.values(this.objects).reduce((acc,obj)=>{
       obj.move();
       if(

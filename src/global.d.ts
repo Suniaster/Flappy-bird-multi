@@ -1,9 +1,10 @@
 
 
 
-interface Point{
+interface Vector{
   x:number,
-  y:number
+  y:number,
+  z?:number
 }
 
 interface socketEvent{
