@@ -36,7 +36,6 @@ function draw() {
 }
 
 function keyPressed(){
-  console.log(keyCode)
   switch(keyCode){
     case 87: // W
       game.clientJump()

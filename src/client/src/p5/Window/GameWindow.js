@@ -44,6 +44,7 @@ class GameWindow{
     this.imgControl.registerImage('flappy', 'bird2.png');
     this.imgControl.registerImage('cano', 'cano_fill.png');
 
+    this.imgControl.registerImage('bot', 'guy.png');
     this.imgControl.registerImage('bg', 'back.png');
   }
 
@@ -75,12 +76,12 @@ class GameWindow{
         img = this.imgControl.getImage('cano')
         break;
     }
+    if(id.startsWith('bot')) img = this.imgControl.getImage('bot')
 
     let newObj = new AbstractObj(
       position, vel, accel, width, height,
       id, img
     );
-    console.log(newObj)
     this.objects.registerObject(id, newObj); 
   }
 

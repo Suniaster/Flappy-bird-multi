@@ -113,26 +113,6 @@ export default class SocketsController{
 
   /** GAME FUNCTIONS */
   private simulateGame = () => {
-    //* handling deleted objects
-    if(this.gameController.objController.buffer.deletedIds.length != 0){
-      this.io.sockets.emit('objects-destroyed', {
-        ids: this.gameController.objController.buffer.deletedIds
-      })
-      this.gameController.objController.buffer.deletedIds = []
-    }
-
-    //* handling deleted created objs
-    if(this.gameController.objController.buffer.createdObjs.length != 0 ){
-      let values =  this.gameController.objController.buffer.createdObjs.reduce((acc, curr)=>{
-        acc.push(curr.getValues())
-        return acc;
-      }, [])
-      this.io.sockets.emit('objects-created', {
-        objects: values
-      })
-      this.gameController.objController.buffer.createdObjs = [];
-    }
-
     //** Handling game end */
     if (!this.gameController.isRunning){
       clearInterval(this.timers.simulation);
@@ -163,6 +143,26 @@ export default class SocketsController{
     //   time1: new Date(),
     //   counter1: this.gameController.time
     // }
+
+    //* handling deleted objects
+    if(this.gameController.objController.buffer.deletedIds.length != 0){
+      this.io.sockets.emit('objects-destroyed', {
+        ids: this.gameController.objController.buffer.deletedIds
+      })
+      this.gameController.objController.buffer.deletedIds = []
+    }
+
+    //* handling deleted created objs
+    if(this.gameController.objController.buffer.createdObjs.length != 0 ){
+      let values =  this.gameController.objController.buffer.createdObjs.reduce((acc, curr)=>{
+        acc.push(curr.getValues())
+        return acc;
+      }, [])
+      this.io.sockets.emit('objects-created', {
+        objects: values
+      })
+      this.gameController.objController.buffer.createdObjs = [];
+    }
 
     // Emiting sync event
     this.io.sockets.emit("sync-game",{
