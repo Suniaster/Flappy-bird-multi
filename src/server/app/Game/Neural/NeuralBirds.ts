@@ -2,6 +2,7 @@ import AbstractThing from "../Objects/AbstractThing";
 import ObjectsController from "../Objects/ObjectsController";
 import Bird from "../Objects/GameObjects/Bird";
 import GeneticNet from "../../../networks/GeneticNet";
+import AbstractNet from "../../../networks/AbstractNet";
 
 
 
@@ -17,7 +18,7 @@ export default class NeuralBirds{
   }
 
   createBird():Bird{
-    return new Bird({x:200,y:300},50,50, 'bot-4331-'+Bird.makeid(5))
+    return new Bird({x:100,y:400},50,50, 'bot-4331-'+Bird.makeid(5))
   }
 
   generateNewBatch(){
@@ -30,24 +31,25 @@ export default class NeuralBirds{
       this.generation += 1;
     }
     else{
-      // Sort list by better scores
+      let topLength = 5
+      let royaltyLenght = 2
 
+      // Sort list by better scores
       this.birds.sort((a,b)=>{
         return b.score - a.score
       })
 
       // Select first four
-      let top = this.birds.splice(0,4);
+      let top = this.birds.splice(0,topLength);
       console.log(`---> Generation ${this.generation} | Top Score: ${top[0].score}`)
 
       // Generate off spring
-
       let offSpring = []
-      for(let i=0;i<8;i+=1){
-        let dad = Math.ceil(Math.random()*3);
-        let mom = Math.ceil(Math.random()*3);
+      for(let i=0;i<this.batch_size - royaltyLenght;i+=1){
+        let dad = Math.round(Math.random()*(topLength-1));
+        let mom = Math.round(Math.random()*(topLength-1));
 
-        while(mom == dad) dad = Math.ceil(Math.random()*3);
+        while(mom == dad) dad = Math.round(Math.random()*(topLength-1));
 
         let newBird = this.createBird()
         newBird.brain = GeneticNet.crossOver(
@@ -58,14 +60,12 @@ export default class NeuralBirds{
       }
 
       // Mutate off spring
-
       offSpring.forEach((bird)=>{
         GeneticNet.mutateNet(bird.brain)
       })
 
       // Create new generation
       let newGeneration = offSpring
-      let royaltyLenght = 2
 
       for(let i=0;i<royaltyLenght;i+=1){
         let royal = this.createBird()
@@ -77,6 +77,9 @@ export default class NeuralBirds{
       newGeneration.forEach((bird)=>{
         this.objController.registerWithObjId(bird);
       })
+
+      // Save top Bird
+      AbstractNet.save(top[0].brain, './best_brain.json')
 
       this.birds = newGeneration;
       this.generation += 1

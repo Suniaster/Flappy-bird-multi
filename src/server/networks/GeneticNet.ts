@@ -67,7 +67,7 @@ export default class GeneticNet extends AbstractNet{
 
   static mutate(gene:any){
     if(Math.random() < GeneticNet.mutationRate){
-      let mutateFactor = 1 + (Math.random() - 0.5) * 3 + (Math.random() - 0.5);
+      let mutateFactor = 1.5 + (Math.random() - 0.5) * 4;
       gene *= mutateFactor
     }
     return gene;

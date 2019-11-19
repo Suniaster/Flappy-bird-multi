@@ -9,8 +9,8 @@ export default class AbstractNet extends Network{
     return JSON.parse(exported);
   }
 
-  public save(file_path: string){
-    var myNetJSON = this.toJSON()
+  public static save(net:Network,file_path: string){
+    var myNetJSON = net.toJSON()
     fs.writeFile(file_path, JSON.stringify(myNetJSON) ,function(err) {
       if(err) {
         return console.log(err);

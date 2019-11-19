@@ -21,7 +21,7 @@ function setup() {
 }
 
 function draw() {
-  background(100);
+  background(game.imgControl.getImage('bg'));
   game.drawFPS();
   
   if(game.menu.gameRunning){

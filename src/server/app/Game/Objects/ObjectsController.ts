@@ -110,7 +110,7 @@ export default class ObjectController{
     let min_dist = 100000;
     let ret_obj = null;
     this.getObjThatIdStartsWith(id_prefix).forEach((val)=>{
-      if(val.position.x - obj.position.x < min_dist){
+      if(val.position.x - obj.position.x < min_dist && (val.position.x+val.width) - obj.position.x > 0){
         min_dist = val.position.x - obj.position.x;
         ret_obj = val;
       } 
@@ -118,6 +118,6 @@ export default class ObjectController{
     if(ret_obj != null)
       return ret_obj;
     else
-      return new Wall({x:10000, y:400}, 50, 50)
+      return new Wall({x:5000, y:400}, 50, 50)
   }
 }
