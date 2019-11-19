@@ -1,6 +1,7 @@
 import AbstractThing from "../Objects/AbstractThing";
 import ObjectsController from "../Objects/ObjectsController";
 import Bird from "../Objects/GameObjects/Bird";
+import GeneticNet from "../../../networks/GeneticNet";
 
 
 
@@ -15,16 +16,70 @@ export default class NeuralBirds{
     this.generation = 1;
   }
 
+  createBird():Bird{
+    return new Bird({x:200,y:300},50,50, 'bot-4331-'+Bird.makeid(5))
+  }
+
   generateNewBatch(){
     if(this.generation == 1){
       for(let i=0;i<this.batch_size;i+=1){
-        let newBird = new Bird({x:30,y:80},50,50, 'bot-4331-'+Bird.makeid(5))
+        let newBird = this.createBird()
         this.birds.push(newBird);
         this.objController.registerWithObjId(newBird);
       }
       this.generation += 1;
     }
     else{
+      // Sort list by better scores
+
+      this.birds.sort((a,b)=>{
+        return b.score - a.score
+      })
+
+      // Select first four
+      let top = this.birds.splice(0,4);
+      console.log(`---> Generation ${this.generation} | Top Score: ${top[0].score}`)
+
+      // Generate off spring
+
+      let offSpring = []
+      for(let i=0;i<8;i+=1){
+        let dad = Math.ceil(Math.random()*3);
+        let mom = Math.ceil(Math.random()*3);
+
+        while(mom == dad) dad = Math.ceil(Math.random()*3);
+
+        let newBird = this.createBird()
+        newBird.brain = GeneticNet.crossOver(
+          top[dad].brain,
+          top[mom].brain
+        )
+        offSpring.push(newBird)
+      }
+
+      // Mutate off spring
+
+      offSpring.forEach((bird)=>{
+        GeneticNet.mutateNet(bird.brain)
+      })
+
+      // Create new generation
+      let newGeneration = offSpring
+      let royaltyLenght = 2
+
+      for(let i=0;i<royaltyLenght;i+=1){
+        let royal = this.createBird()
+        royal.brain = top[i].brain
+        newGeneration.push(royal)
+      }
+
+      // Register objects
+      newGeneration.forEach((bird)=>{
+        this.objController.registerWithObjId(bird);
+      })
+
+      this.birds = newGeneration;
+      this.generation += 1
     }
   }
 

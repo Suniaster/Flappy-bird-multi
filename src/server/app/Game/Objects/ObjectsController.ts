@@ -1,5 +1,6 @@
 import AbstractThing from "./AbstractThing";
 import CollisionController from "./Collision/CollisionController";
+import Wall from "./GameObjects/Wall";
 
 
 
@@ -107,14 +108,16 @@ export default class ObjectController{
 
   findObjectLessDistance(obj:AbstractThing, id_prefix, axis:'x'|'y'='x'):AbstractThing{
     let min_dist = 100000;
-    let ret_obj;
+    let ret_obj = null;
     this.getObjThatIdStartsWith(id_prefix).forEach((val)=>{
       if(val.position.x - obj.position.x < min_dist){
         min_dist = val.position.x - obj.position.x;
         ret_obj = val;
       } 
     })
-
-    return ret_obj;
+    if(ret_obj != null)
+      return ret_obj;
+    else
+      return new Wall({x:10000, y:400}, 50, 50)
   }
 }

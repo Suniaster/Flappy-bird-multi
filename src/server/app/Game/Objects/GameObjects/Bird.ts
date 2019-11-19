@@ -9,9 +9,9 @@ export default class Bird extends AbstractThing{
   score: number;
   alive: boolean;
 
-
   constructor(public position:Vector, public width, public height, public id:string=Bird.makeid(10)){
     super(position, width, height, id);
+
     this.velocity = {
       x: 0,
       y: 0
@@ -25,7 +25,7 @@ export default class Bird extends AbstractThing{
     this.symbol = 'Flappy';
 
     this.brain = new Perceptron(4,[3,3],1);
-    this.limit = 0.2;
+    this.limit = 0.5;
     this.alive = true;
     this.score = 0;
   }
@@ -44,4 +44,5 @@ export default class Bird extends AbstractThing{
     else 
       return false
   }
+
 }

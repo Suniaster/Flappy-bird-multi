@@ -3,51 +3,74 @@ import { Network, Neuron } from "synaptic";
 
 export default class GeneticNet extends AbstractNet{
 
-  public static mutationRate:number = 0.2;
+  public static mutationRate:number = 0.3;
 
-  public static crossOver(network1:Network, network2: Network, key:string){
-    var a = network1.neurons();
-    var b = network2.neurons();
+  public static crossOver(network1:Network, network2: Network){
+    var net1_neurons = network1.neurons();
+    var net2_neurons = network2.neurons();
 
-    var cutLocation = Math.round(a.length * Math.random());
+    var cutLocation = Math.round(net1_neurons.length * Math.random());
 
-    var tmp;
-    for (var k = cutLocation; k < a.length; k++) {
-      // Swap
-      tmp = a[k]['neuron'][key];
-      a[k]['neuron'][key] = b[k]['neuron'][key];
-      b[k]['neuron'][key] = tmp;
+    let offSpring1 = Network.fromJSON(network1.toJSON()); 
+    let offSpring2 = Network.fromJSON(network2.toJSON());
+
+    let oS1neuros = offSpring1.neurons();
+    let oS2neuros = offSpring2.neurons();
+
+    for(let k = cutLocation; k < net1_neurons.length; k++) {
+      oS1neuros[k]['neuron']['bias'] = net2_neurons[k]['neuron']['bias']
+      oS2neuros[k]['neuron']['bias'] = net1_neurons[k]['neuron']['bias']
     }
+    
+
+    return Math.random() > 0.5 ? offSpring1 : offSpring2
   }
   
-  public static mutateNeurons(a:number[], mutationRate: number = GeneticNet.mutationRate){
-    
-    for (var k = 0; k < a.length; k++) {
-      // Should mutate?
-      if (Math.random() > mutationRate) {
-          continue;
-      }
-      a[k]['neuron']['bias'] += a[k]['bias'] * (Math.random() - 0.5) * 3 + (Math.random() - 0.5);
-      GeneticNet.mutateNeuron(a[k]['neuron']);
+  public static mutateNet(network:Network){
+
+    let neurons = network.neurons()
+    for (var k = 0; k < neurons.length; k++) {
+      //Mutate bias
+      neurons[k]['neuron']['bias'] = GeneticNet.mutate(neurons[k]['neuron']['bias'])
     }
+
+    GeneticNet.getNetworkConnections(network).forEach((val)=>{
+      val.weight= GeneticNet.mutate(val.weight)
+    })
+    return network;
   }
 
-  public static mutate(net: Network):Network{
-    GeneticNet.mutateNeurons(net.neurons());
-    return net;
-  }
+  static getNetworkConnections(net:Network){
+    let cons = {}
+    let neurons = net.neurons()
 
-  public static mutateNeuron(a:any, mutationRate: number=GeneticNet.mutationRate){
-    var connections = a.connections.projected;
-    for (const con in connections) {
-       // Should mutate?
-      if (Math.random() > mutationRate) {
-        continue;
+    // Botando tudo em um hash para evitar repetições
+    for(let k=0; k< neurons.length; k+=1){
+      for(let c in neurons[k]['neuron'].connections.projected){
+        let connection = neurons[k]['neuron'].connections.projected[c]
+        cons[c] = connection;
       }
-      if (connections.hasOwnProperty(con)) {
-        connections[con].weight += connections[con].weight * (Math.random() - 0.5) * 3 + (Math.random() - 0.5);;
+
+      for(let c in neurons[k]['neuron'].connections.inputs){
+        let connection = neurons[k]['neuron'].connections.inputs[c]
+        cons[c] = connection;
       }
     }
+
+    let toret = []
+    for(let c in cons){
+      let connection = cons[c]
+      toret.push(connection)
+    }
+    return toret
+  }
+
+  static mutate(gene:any){
+    if(Math.random() < GeneticNet.mutationRate){
+      let mutateFactor = 1 + (Math.random() - 0.5) * 3 + (Math.random() - 0.5);
+      gene *= mutateFactor
+    }
+    return gene;
   }
 
 }
