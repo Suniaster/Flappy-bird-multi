@@ -1,8 +1,7 @@
-import AbstractNet from "./AbstractNet";
 import { Network, Neuron } from "synaptic";
 const fs = require('fs');
 
-export default class GeneticNet extends AbstractNet{
+export default class GeneticNet{
 
   public static mutationRate:number = 0.3;
 

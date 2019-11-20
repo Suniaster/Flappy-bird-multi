@@ -2,7 +2,6 @@ import AbstractThing from "../Objects/AbstractThing";
 import ObjectsController from "../Objects/ObjectsController";
 import Bird from "../Objects/GameObjects/Bird";
 import GeneticNet from "../../../networks/GeneticNet";
-import AbstractNet from "../../../networks/AbstractNet";
 import { Network, Neuron } from "synaptic";
 
 
@@ -24,7 +23,7 @@ export default class NeuralBirds{
   generateNewBatch(){
     if(this.generation == 1){
       let a = this.createBird()
-      a.brain = Network.fromJSON(AbstractNet.loadJSON('./well_trained_flappy.json'))
+      a.brain = Network.fromJSON(GeneticNet.loadJSON('./well_trained_flappy.json'))
       this.birds.push(a);
       this.objController.registerWithObjId(a);
       for(let i=0;i<this.batch_size;i+=1){
@@ -83,7 +82,7 @@ export default class NeuralBirds{
       })
 
       // Save top Bird
-      AbstractNet.save(top[0].brain, './best_brain.json')
+      GeneticNet.save(top[0].brain, './best_brain.json')
 
       this.birds = newGeneration;
       this.generation += 1
