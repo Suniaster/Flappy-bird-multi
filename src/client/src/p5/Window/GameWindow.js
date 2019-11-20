@@ -85,7 +85,4 @@ class GameWindow{
     this.objects.registerObject(id, newObj); 
   }
 
-  clientJump(){
-    this.socket.emit('jump')
-  }
 }

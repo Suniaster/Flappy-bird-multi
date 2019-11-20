@@ -27,18 +27,13 @@ function draw() {
   if(game.menu.gameRunning){
     game.objects.moveAndDrawAllObjs()
     game.time += 1
-
-    //* Checking time with server *//
-    if(game.time%60==0){
-      socketControl.socket.emit('check-time', {time: game.time})
-    }
   } 
 }
 
 function keyPressed(){
   switch(keyCode){
     case 87: // W
-      game.clientJump()
+      socketControl.socket.emit('key-press', keyCode)
       break;
     case 68: // D
       break;

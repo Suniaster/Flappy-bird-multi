@@ -12,10 +12,6 @@ class SocketsController{
 
     this.socket.on("game-start", (data)=>{
       this.gameController.menu.initGame();
-      for(let i=0;i<data.birds.ids.length;i+=1){
-        let id = data.birds.ids[i]
-        this.gameController.createFlappy(id)
-      }
     })
 
     this.socket.on("objects-created", (data)=>{
@@ -41,7 +37,7 @@ class SocketsController{
     this.socket.on("game-end", ()=>{
       //TODO: fazer fim de jogo
       this.gameController.reset();
-      setTimeout(()=>this.socket.emit('game-start'), 200)
+      // setTimeout(()=>this.socket.emit('game-start'), 200)
     })
 
     this.socket.on("jump", (data)=>{
