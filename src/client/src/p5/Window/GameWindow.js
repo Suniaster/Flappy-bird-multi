@@ -44,7 +44,7 @@ class GameWindow{
     this.imgControl.registerImage('flappy', 'bird2.png');
     this.imgControl.registerImage('cano', 'cano_fill.png');
 
-    this.imgControl.registerImage('bot', 'guy.png');
+    this.imgControl.registerImage('bot', 'bird3.png');
     this.imgControl.registerImage('bg', 'back.png');
   }
 

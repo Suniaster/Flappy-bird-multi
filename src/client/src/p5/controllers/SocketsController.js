@@ -41,6 +41,7 @@ class SocketsController{
     this.socket.on("game-end", ()=>{
       //TODO: fazer fim de jogo
       this.gameController.reset();
+      setTimeout(()=>this.socket.emit('game-start'), 200)
     })
 
     this.socket.on("jump", (data)=>{
