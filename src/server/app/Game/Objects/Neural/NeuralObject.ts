@@ -21,7 +21,7 @@ export default abstract class NeuralObject extends AbstractThing{
     this.threshhold = 0.5;
   }
 
-  setBrain(net:Network){
+  public setBrain(net:Network){
     this.brain = net;
   }
 

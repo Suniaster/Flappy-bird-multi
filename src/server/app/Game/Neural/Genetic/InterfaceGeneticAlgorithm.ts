@@ -1,11 +1,11 @@
-import NeuralObject from "../Objects/Neural/NeuralObject";
-import AbstractThing from "../Objects/AbstractThing";
-import ObjectController from "../Objects/ObjectsController";
-import GeneticNet from "../../../networks/GeneticNet";
+import NeuralObject from "../../Objects/Neural/NeuralObject";
+import AbstractThing from "../../Objects/AbstractThing";
+import ObjectController from "../../Objects/ObjectsController";
+import GeneticNet from "../../../../networks/GeneticNet";
 
 
 
-export default class GeneticAlgorithm<T extends NeuralObject>{
+export default abstract class InterfaceGeneticAlgorithm<T extends NeuralObject>{
 
   objects: T[]
   generation: number;
@@ -31,6 +31,8 @@ export default class GeneticAlgorithm<T extends NeuralObject>{
     this.elite_size = 3;
     this.verbose = false;
   }
+
+  public abstract makeObjsPerform();
 
   public passGeneration(){
     if(this.generation === 1){
