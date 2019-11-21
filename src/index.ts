@@ -11,6 +11,7 @@ serverC.initServer();
 
 let simulatorNeural = new NeuralFlappyController([800, 2000])
 let simulatorGame = new FlappyGame([800,2000])
+
 const socketsC = new SimulationSocketsController(
   serverC, 
   simulatorNeural
