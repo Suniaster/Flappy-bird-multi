@@ -1,15 +1,19 @@
 import ServerController from "./server/app/ServerController";
-import SimulationSocketsController from "./server/app/Sockets/SimulationSocketController";
 import FlappyGame from "./server/app/Game/Controller/FlappyGame";
+
+import SimulationSocketsController from "./server/app/Sockets/SimulationSocketController";
+import NeuralFlappyController from "./server/app/Game/Controller/NeuralFlappyController";
 
 
 // Controladora do servidor
 const serverC = new ServerController();
 serverC.initServer();
 
+let simulatorNeural = new NeuralFlappyController([800, 2000])
+let simulatorGame = new FlappyGame([800,2000])
 const socketsC = new SimulationSocketsController(
   serverC, 
-  new FlappyGame([800,2000])
+  simulatorNeural
 )
 
 socketsC.initConnectionsHandler();
