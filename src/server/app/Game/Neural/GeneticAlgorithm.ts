@@ -56,7 +56,7 @@ export default class GeneticAlgorithm<T extends NeuralObject>{
     })
   }
 
-  private evolveGeneration(){
+  protected evolveGeneration(){
     //* Sort by fittest 
     this.objects.sort((a,b)=>{
       return b.fitness_score - a.fitness_score
@@ -108,12 +108,12 @@ export default class GeneticAlgorithm<T extends NeuralObject>{
     this.objects = newGeneration;
   }
   
-  private createObject():T{
+  protected createObject():T{
     let params = JSON.parse(JSON.stringify(this.default_obj_params))
     return new this.ObjectConstructor(...params);
   }
 
-  public generateFirstGeneration(){
+  protected generateFirstGeneration(){
     for(let i=0;i<this.batch_size;i+=1){
       let newObj = this.createObject();
       this.objects.push(newObj);
