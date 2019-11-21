@@ -1,8 +1,8 @@
 import ServerController from "./server/app/ServerController";
-import FlappyGame from "./server/app/Game/Controller/FlappyGame";
+import FlappyGame from "./server/app/Simulation/Controller/FlappyGame";
 
 import SimulationSocketsController from "./server/app/Sockets/SimulationSocketController";
-import NeuralFlappyController from "./server/app/Game/Controller/NeuralFlappyController";
+import NeuralFlappyController from "./server/app/Simulation/Controller/NeuralFlappyController";
 
 
 // Controladora do servidor

@@ -1,5 +1,5 @@
 import Socket from 'socket.io';
-import AbstractSimulationController from '../Game/Controller/AbstractSimulationController';
+import AbstractSimulationController from '../Simulation/Controller/AbstractSimulationController';
 
 
 export default class SimulationSocketsController{
