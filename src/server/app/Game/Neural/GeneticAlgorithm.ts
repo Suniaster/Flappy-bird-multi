@@ -9,10 +9,10 @@ export default class GeneticAlgorithm<T extends NeuralObject>{
 
   objects: T[]
   generation: number;
-  
+  test_id: string;
+
   //* 
   elite_size: number
-
   verbose: boolean;
 
   constructor(
@@ -20,9 +20,10 @@ export default class GeneticAlgorithm<T extends NeuralObject>{
       public default_obj_params:any[],
       public objects_controller:ObjectController = new ObjectController(), 
       public batch_size=10,
-      public test_id = AbstractThing.makeid(10)
+      public test_prefix = "test"
     ){
     
+    this.test_id = AbstractThing.makeid(10)
     this.objects = [];
     this.generation = 1;
 
@@ -33,8 +34,8 @@ export default class GeneticAlgorithm<T extends NeuralObject>{
 
   public passGeneration(){
     if(this.generation === 1){
-      if(this.verbose)console.log(`Test Number: ${this.test_id}`)
-      this.generateFirstBatch();
+      if(this.verbose) console.log(`Test Number: ${this.test_id}`)
+      this.generateFirstGeneration();
     }
     else{
       this.evolveGeneration();
@@ -46,7 +47,7 @@ export default class GeneticAlgorithm<T extends NeuralObject>{
     this.objects_controller.buffer.deletedIds.forEach((killedId)=>{
 
       this.objects.forEach((neuralObj)=>{
-        if(killedId === neuralObj.id){
+        if(killedId === neuralObj.id && neuralObj.alive){
           neuralObj.alive = false;
           neuralObj.fitness_score = fitness_for_killed;
         }
@@ -63,7 +64,7 @@ export default class GeneticAlgorithm<T extends NeuralObject>{
 
     //* Get Elite
     let elite = this.objects.splice(0, this.elite_size);
-    if(this.verbose) console.log(`-> Generation ${this.generation} | Best Fitness: ${elite[0]}`)
+    if(this.verbose) console.log(`-> Generation ${this.generation} | Best Fitness: ${elite[0].fitness_score}`)
 
     //* Generate OffSpring
     let offspring:T[] = []
@@ -103,15 +104,16 @@ export default class GeneticAlgorithm<T extends NeuralObject>{
     })
 
     //* Save result
-    GeneticNet.save(elite[0].brain, `./neuralNets/${this.test_id}.json`)
+    GeneticNet.save(elite[0].brain, `./neuralNets/${this.test_prefix}-${this.test_id}.json`)
     this.objects = newGeneration;
   }
   
   private createObject():T{
-    return new this.ObjectConstructor(...this.default_obj_params);
+    let params = JSON.parse(JSON.stringify(this.default_obj_params))
+    return new this.ObjectConstructor(...params);
   }
 
-  private generateFirstBatch(){
+  public generateFirstGeneration(){
     for(let i=0;i<this.batch_size;i+=1){
       let newObj = this.createObject();
       this.objects.push(newObj);

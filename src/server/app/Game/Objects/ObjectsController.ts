@@ -106,6 +106,12 @@ export default class ObjectController{
     }, [])
   }
 
+  /**
+   *  @description WIP - Pega objeto com a menor distancia em algum eixo
+   * @param obj - objeto base
+   * @param id_prefix - prefixo dos objetos que devem ser usados na procura
+   * @param axis - eixo da menor distancia
+   */
   findObjectLessDistance(obj:AbstractThing, id_prefix, axis:'x'|'y'='x'):AbstractThing{
     let min_dist = 100000;
     let ret_obj = null;
@@ -119,5 +125,11 @@ export default class ObjectController{
       return ret_obj;
     else
       return new Wall({x:5000, y:400}, 50, 50)
+  }
+
+  forEach(f: (arg1:AbstractThing) => {}){
+    Object.values(this.objects).forEach((val)=>{
+      f(val);
+    })
   }
 }

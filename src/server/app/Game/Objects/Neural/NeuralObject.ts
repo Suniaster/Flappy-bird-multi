@@ -14,7 +14,7 @@ export default abstract class NeuralObject extends AbstractThing{
   constructor(...args:[Vector, number, number, string]){
     super(args[0], args[1], args[2], args[3]);
     
-    this.alive = false;
+    this.alive = true;
     this.fitness_score = 0;
     
     // Costumizable variables
